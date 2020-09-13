@@ -14,7 +14,7 @@ class ClienteExterno(models.Model):
     apellido_cliex = models.CharField(max_length=25)
     telefono = models.BigIntegerField()
     email = models.CharField(max_length=100)
-    id_pias = models.ForeignKey('Pais', models.DO_NOTHING, db_column='id_pias')
+    id_pais = models.ForeignKey('Pais', models.DO_NOTHING, db_column='id_pais')
 
     class Meta:
         managed = False
@@ -93,7 +93,7 @@ class MetodoPagoL(models.Model):
 
 class PagoEx(models.Model):
     id_pagoex = models.BigAutoField(primary_key=True)
-    fecha_pagoex = models.DateField(blank=True, null=True)
+    fecha_pagoex = models.DateField()
     id_metodo_pago = models.ForeignKey(MetodoPagoE, models.DO_NOTHING, db_column='id_metodo_pago')
 
     class Meta:
@@ -113,7 +113,7 @@ class PagoI(models.Model):
 
 
 class Pais(models.Model):
-    id_pias = models.BigAutoField(primary_key=True)
+    id_pais = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=25)
 
     class Meta:
@@ -151,7 +151,7 @@ class ProcesoVentaLocal(models.Model):
 class Producto(models.Model):
     id_producto = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=25)
-    preciio = models.BigIntegerField()
+    precio = models.BigIntegerField()
     calidad = models.BigIntegerField()
     id_fruta = models.ForeignKey(Fruta, models.DO_NOTHING, db_column='id_fruta')
     rut_productor = models.ForeignKey('Productor', models.DO_NOTHING, db_column='rut_productor')
