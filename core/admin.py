@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Admin, Bodega
+from .models import *
 # Register your models here.
-admin.site.register(Admin)
-admin.site.register(Bodega)
+admin.site.register(Vehiculo)
+admin.site.register(Transportista)
