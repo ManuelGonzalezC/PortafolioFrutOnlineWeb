@@ -7,5 +7,27 @@
 </head>
 <body>
     <h1>HOMEEE PRUEBA</h1>
+    <nav>
+        <ul>
+            <li>
+                <a href="alguna url futuraXD"> Home</a>
+            </li>
+            <li>
+                <a href="x2">OtroHomexdd</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li>                
+                <a href="x3"> Usuario: {{user.username}} </a>
+                
+            </li>
+            <li>
+                <a href="{% url 'logout' %}">Cerrar sesion</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+
+
 </body>
 </html>
