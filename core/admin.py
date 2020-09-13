@@ -3,8 +3,5 @@ from .models import *
 # Register your models here.
 admin.site.register(Vehiculo)
 admin.site.register(Transportista)
-<<<<<<< HEAD
-
-=======
 admin.site.register(Producto)
->>>>>>> master
+
