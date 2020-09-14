@@ -6,27 +6,27 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>HOMEEE PRUEBA</h1>
-    <nav>
+    <h1>HOMEEE PRUEBA</h1>  
+    <header>
         <ul>
             <li>
-                <a href="alguna url futuraXD"> Home</a>
-            </li>
-            <li>
-                <a href="x2">OtroHomexdd</a>
+                <a href="/">Hola</a>
             </li>
             {% if user.is_authenticated %}
-            <li>                
-                <a href="x3"> Usuario: {{user.username}} </a>
-                
+            <li>
+                <a href="/"> Usuario: {{ user.username}}</a>
             </li>
             <li>
-                <a href="{% url 'logout' %}">Cerrar sesion</a>
+                <a href="{% url 'logout' %}">Cerrar sesión</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{% url 'login' %}">Iniciar sesión</a>
             </li>
             {% endif %}
+            
         </ul>
-    </nav>
-
+    </header>  
 
 
 </body>
