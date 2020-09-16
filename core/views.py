@@ -11,8 +11,8 @@ import cx_Oracle
 # Create your views here.
 
 @login_required
-def home(request):
-    return render(request,'core/home.html')
+def base(request):
+    return render(request,'core/base.html')
 
 def productos(request):
     data = {
