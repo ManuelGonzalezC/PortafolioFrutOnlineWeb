@@ -5,4 +5,5 @@ admin.site.register(Vehiculo)
 admin.site.register(Transportista)
 admin.site.register(Producto)
 admin.site.register(ClienteInterno)
- 
+admin.site.register(Subasta)
+
