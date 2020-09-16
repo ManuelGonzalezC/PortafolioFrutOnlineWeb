@@ -196,3 +196,43 @@ def eliminar_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     subasta.delete()
     return redirect(to="list_subastas")
+
+def listado_productores(request):
+    productores = Productor.objects.all()
+    data = {
+        'Productores': productores # la variable 'Peliculas ' definida en el diccionario python "data" es como debo llamar el listado de productores desde el template
+    }
+    return render(request, 'core/listado_productores.html', data)
+
+def nuevos_productores(request):
+    data = {
+        'form': ProductorForm()
+    }
+
+    if request.method == "POST":
+        formulario = ProductorForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje']="Guardado correctamente"
+
+    return render(request, 'core/nuevos_productores.html', data)
+
+def modificar_productores(request, id):
+    productores = Productor.objects.get(rut_productor=id)
+    data = {
+        'form': ProductorForm(instance=productores)
+    }
+
+    if request.method == "POST":
+        formulario = ProductorForm(data=request.POST, instance=productores)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = "Modificado correctamente"
+            data['form'] = formulario 
+    return render(request, 'core/modificar_productores.html', data)
+
+def eliminar_productores(request, id):
+     productor = Productor.objects.get(rut_productor=id)
+     productor.delete()
+
+     return redirect(to="listado_productores")

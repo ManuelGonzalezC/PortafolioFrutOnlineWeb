@@ -19,3 +19,8 @@ class ClienteExternoForm(ModelForm):
         model = ClienteExterno
         fields = ['nie', 'nombre_cliex', 'apellido_cliex','telefono','email', 'id_pais']
 
+class ProductorForm(ModelForm):
+    class Meta:
+        model = Productor
+        fields = ['rut_productor', 'nombre_productor', 'apellido_productor', 'telefono', 'email']
+

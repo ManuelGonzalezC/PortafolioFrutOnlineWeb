@@ -20,4 +20,8 @@ urlpatterns = [
     path('modificarClienteE/<id>/', modificarClienteE, name="modificarClienteE"),
     path('eliminarClienteE/<id>/', eliminarClienteE, name= "eliminarClienteE"),
     path('eliminarClienteI/<id>/', eliminarClienteI, name="eliminarClienteI"),
+    path('listado-productores/', listado_productores, name="listado_productores"),
+    path('nuevos-productores/', nuevos_productores, name="nuevos_productores"),
+    path('modificar-productores/<id>/', modificar_productores, name="modificar_productores"),
+    path('eliminar-productores/<id>/', eliminar_productores, name="eliminar_productores"),
 ]

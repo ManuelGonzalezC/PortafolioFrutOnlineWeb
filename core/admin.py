@@ -7,4 +7,5 @@ admin.site.register(Producto)
 admin.site.register(ClienteInterno)
 admin.site.register(Subasta)
 admin.site.register(ClienteExterno)
+admin.site.register(Productor)
 
