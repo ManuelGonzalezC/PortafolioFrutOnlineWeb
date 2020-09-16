@@ -27,7 +27,8 @@ class ClienteInterno(models.Model):
     apellido_clii = models.CharField(max_length=25)
     telefono = models.BigIntegerField()
     email = models.CharField(max_length=100)
-    id_direccion = models.ForeignKey('DireccionLocal', models.DO_NOTHING, db_column='id_direccion')
+    direccion = models.CharField(max_length=255)
+    id_comuna = models.ForeignKey('ComunaLocal', models.DO_NOTHING, db_column='id_comuna')
 
     class Meta:
         managed = False
@@ -53,16 +54,6 @@ class Contrato(models.Model):
     class Meta:
         managed = False
         db_table = 'contrato'
-
-
-class DireccionLocal(models.Model):
-    id_direccion = models.BigAutoField(primary_key=True)
-    direccion = models.CharField(max_length=255)
-    id_comuna = models.ForeignKey(ComunaLocal, models.DO_NOTHING, db_column='id_comuna')
-
-    class Meta:
-        managed = False
-        db_table = 'direccion_local'
 
 
 class Fruta(models.Model):
