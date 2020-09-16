@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import *
+from .forms import *
 from .serializers import ProductoSerializer
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -11,36 +12,77 @@ import cx_Oracle
 # Create your views here.
 
 
-def home(request):
+def base(request):
     return render(request,'core/base.html')
 
-def ClientesExternos(request):
+def eliminarClienteE(request, id):
+    clienteE = ClienteExterno.objects.get(nie=id)
+    clienteE.delete()
+    
+    return redirect(to= "ClientesExternos")
+
+
+def modificarClienteE(request,id):
+    clienteE = ClienteExterno.objects.get(nie=id)
+    data = {
+        'form': ClienteExternoForm(instance=clienteE)
+    }
+    if request.method == 'POST':
+        formulario = ClienteExternoForm(request.POST, instance=clienteE)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = "Modificado Correctamente"
+            data['form'] = formulario
+    return render(request, 'core/modificarClienteE.html', data)
+
+def ClientesExternos(request): #Agregar y listar
     clientesE = ClienteExterno.objects.all()
     data = {
-        'ClienteExterno': clientesE
+        'form': ClienteExternoForm(),
+        'ClientesE': clientesE
     }
+    if request.method == 'POST':
+        formulario = ClienteExternoForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = 'Guardado Correctamente'
     return render(request, 'core/ClientesExternos.html', data)
 
-def ClientesLocales(request):
-    clientesL =ClienteInterno.objects.all()
+def eliminarClienteI(request,id):
+    ClientesI = ClienteInterno.objects.get(rut_clii=id)
+    ClientesI.delete()
+    return redirect(to = 'ClientesInternos')
+
+def modificarClienteI(request, id):
+    ClientesI = ClienteInterno.objects.get(rut_clii=id)
     data = {
-        'ClienteLocal': clientesL
+        'form': ClienteInternoForm(instance= ClientesI)
     }
 
     if request.method == 'POST':
-        rut = request.POST.get('rutLocal')
-        nombre = request.POST.get('nombreLocal')
-        apellido = request.POST.get('apellidoLocal')
-        telefono = request.POST.get('telefonoLocal')
-        email = request.POST.get('emailLocal')
-        direccion = request.POST.get('direccion')
-        comuna = request.POST.get(id_comuna)
-        agregar_ClienteLocal = agregar_ClienteLocal(rut, nombre, apellido, telefono, email, direccion, id_comuna)
-        if agregar_ClienteLocal == 1:
-            data['mensaje'] = 'Agregado Correctamente'
-        else:
-            data['mensaje'] = 'no se pudo agregar'
-    return render(request, 'core/ClientesLocales.html', data)
+        formulario= ClienteInternoForm(data=request.POST, instance= ClientesI)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = "Modificado correctamente"
+            data['form'] = formulario
+
+    return render(request, 'core/modificarClienteI.html', data)
+
+
+def ClientesInternos(request): #Agregar y listar
+    ClientesI =ClienteInterno.objects.all()
+    data = {
+        'form': ClienteInternoForm(),
+        'ClientesI': ClientesI
+    }
+    if request.method == 'POST':
+        formulario = ClienteInternoForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = 'Guardado Correctamente'
+
+    return render(request, 'core/ClientesInternos.html', data)
+
 
 def productos(request):
     data = {
