@@ -22,12 +22,16 @@ def productos(request):
         id_fruta = request.POST.get('tipofruta')
         precio = request.POST.get('precio')
         calidad = request.POST.get('calidad')
-        rut_productor = request('id_productor')
+        rut_productor = request.POST.get('id_productor')
         salida = agregar_producto(nombre,id_fruta,precio,calidad,rut_productor)
         if salida == 1:
             data['mensaje'] = 'Agregado Correctamente'
         else:
             data['mensaje'] = 'no se pudo agregar'
+    
+    if request.method == 'DELETE':
+        id_producto = request.DELETE.get('id_producto')
+        eliminar_producto(id_producto) 
 
     return render(request,'core/productos.html',data)
 
@@ -79,3 +83,8 @@ def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_AGREGAR_PRODUCTO",[nombre,id_fruta,precio,calidad,rut_productor, salida])
     return salida.getvalue()
+
+def eliminar_producto(id_producto):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    cursor.callproc("SP_ELIMINAR_PRODUCTO",[id_producto])

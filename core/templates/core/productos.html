@@ -52,6 +52,7 @@
             <th>Tipo de fruta</th>
             <th>Precio</th>
             <th>Calidad</th>
+            <th>Opciones</th>
         </tr>
 
         {% for x in productos %}
@@ -61,6 +62,9 @@
                 <td>{{x.2}}</td>
                 <td>{{x.3}}</td>
                 <td>{{x.4}}</td>
+                <td>
+                    <a href="{% url 'eliminar_producto' x.0 %}">Eliminar</a>
+                </td>
             </tr>
         {% endfor %}
     </table>
