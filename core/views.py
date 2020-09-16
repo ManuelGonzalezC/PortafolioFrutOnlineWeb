@@ -10,6 +10,7 @@ import cx_Oracle
 
 # Create your views here.
 
+
 def home(request):
     return render(request,'core/base.html')
 
