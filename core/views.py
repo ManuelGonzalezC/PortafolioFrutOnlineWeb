@@ -4,7 +4,7 @@ from .models import *
 from .forms import *
 from .serializers import ProductoSerializer
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import connection
 import cx_Oracle
 from .forms import SubastaForm
@@ -12,7 +12,6 @@ from .forms import SubastaForm
 
 
 
-@login_required
 def base(request):
     return render(request,'core/base.html')
 
@@ -158,6 +157,7 @@ def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     cursor.callproc("SP_AGREGAR_PRODUCTO",[nombre,id_fruta,precio,calidad,rut_productor, salida])
     return salida.getvalue()
 
+@permission_required('core.add_subasta')
 def list_subastas(request):
     subasta = Subasta.objects.all()
     data_sub = {
