@@ -17,14 +17,17 @@
       <label class="logo">FrutOnline</label>
       <ul>
         <li><a class="active" href="#">Inicio</a></li>
-        <li><a href="#">Portal Cliente</a></li>
+        <li><a href="#">Portal Cliente Externo</a></li>
+        <li><a href="#">Portal Cliente Interno</a></li>
         <li><a href="#">Portal Productor</a></li>
         <li><a href="{% url 'list_subastas'%}">Portal Transportista</a></li>
-        {% if user.is_authenticated %}
-        <li><a href="#">Bienvenido: {{ user.username }}</a></li>
-        <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
-        {% endif %}
       </ul>
+      <ul>
+        {% if user.is_authenticated %}
+          <li><a href="#"></a>Bienvenido: {{ user.username }}</a></li>
+          <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+        {% endif %}
+    </ul>
     </nav>
     <section></section>
   </body>
