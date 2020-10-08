@@ -1,6 +1,7 @@
 from django.urls import path , include
 from .views import *
 from rest_framework import routers
+from django.conf.urls import url
 
 rourter = routers.DefaultRouter()
 rourter.register('productos',ProductoViewSet)
@@ -24,4 +25,6 @@ urlpatterns = [
     path('nuevos-productores/', nuevos_productores, name="nuevos_productores"),
     path('modificar-productores/<id>/', modificar_productores, name="modificar_productores"),
     path('eliminar-productores/<id>/', eliminar_productores, name="eliminar_productores"),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('registroClienteEx/', registroClienteEx, name='registroClienteEx'),
 ]

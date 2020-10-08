@@ -4,15 +4,15 @@ from .models import *
 from .forms import *
 from .serializers import ProductoSerializer
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import connection
 import cx_Oracle
-from .forms import SubastaForm
+from .forms import SubastaForm, RegistroClienteEx
+from django.contrib.auth.forms import UserCreationForm
 
 
 
 
-@login_required
 def base(request):
     return render(request,'core/base.html')
 
@@ -156,6 +156,7 @@ def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     cursor.callproc("SP_AGREGAR_PRODUCTO",[nombre,id_fruta,precio,calidad,rut_productor, salida])
     return salida.getvalue()
 
+@permission_required('core.view_subasta')
 def list_subastas(request):
     subasta = Subasta.objects.all()
     data_sub = {
@@ -163,6 +164,7 @@ def list_subastas(request):
     }
     return render(request,'core/list_subastas.html', data_sub)
 
+@permission_required('core.add_subasta')
 def ingresar_subasta(request):
     data_sf = {
         'form':SubastaForm
@@ -175,6 +177,7 @@ def ingresar_subasta(request):
 
     return render(request, 'core/ingresar_subasta.html', data_sf)
 
+@permission_required('core.change_subasta')
 def mod_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     data_mod = {
@@ -234,3 +237,17 @@ def eliminar_productores(request, id):
      productor.delete()
 
      return redirect(to="listado_productores")
+
+def registroClienteEx(request):
+    if request.method == 'POST':
+        form = RegistroClienteEx(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegistroClienteEx()
+    return render(request, 'registration/registroClienteEx.html', {'form': form})
