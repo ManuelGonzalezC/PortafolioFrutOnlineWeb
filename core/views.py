@@ -17,8 +17,6 @@ def base(request):
     return render(request,'core/base.html')
 
 
-
-
 def eliminarClienteE(request, id):
     clienteE = ClienteExterno.objects.get(nie=id)
     clienteE.delete()
