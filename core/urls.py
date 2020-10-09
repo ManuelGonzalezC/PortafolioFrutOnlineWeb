@@ -27,4 +27,6 @@ urlpatterns = [
     path('eliminar-productores/<id>/', eliminar_productores, name="eliminar_productores"),
     path('accounts/', include('django.contrib.auth.urls')),
     path('registroClienteEx/', registroClienteEx, name='registroClienteEx'),
+    path('registroClienteI/', registroClienteIn, name='registroClienteI'),
+    path('registroProductor/', registroProductor, name='registroProductor'),
 ]
