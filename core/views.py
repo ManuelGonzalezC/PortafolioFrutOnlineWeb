@@ -9,6 +9,7 @@ from django.db import connection
 import cx_Oracle
 from .forms import SubastaForm, RegistroClienteEx
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
 
 
 
@@ -85,7 +86,7 @@ def ClientesInternos(request): #Agregar y listar
 
     return render(request, 'core/ClientesInternos.html', data)
 
-
+@permission_required('core.view_producto')
 def productos(request):
     data = {
         'productos':listado_productos(),
@@ -112,6 +113,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
+@permission_required('core.view_producto')
 ## Procedimientos Almacenados
 def listado_productos():
     django_cursor = connection.cursor()
@@ -149,6 +151,7 @@ def listado_idproductor_productos():
         lista.append(fila)
     return lista
 
+@permission_required('core.add_producto')
 def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -193,6 +196,7 @@ def mod_subasta(request, id):
 
     return render(request, 'core/mod_subastas.html', data_mod)
 
+@permission_required('core.delete_subasta')
 def eliminar_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     subasta.delete()
@@ -246,8 +250,42 @@ def registroClienteEx(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
+            group = Group.objects.get(name='Cliente_Externo')
+            user.groups.add(group)
             login(request, user)
             return redirect('home')
     else:
         form = RegistroClienteEx()
     return render(request, 'registration/registroClienteEx.html', {'form': form})
+
+def registroClienteIn(request):
+    if request.method == 'POST':
+        form = RegistroClienteIn(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            group = Group.objects.get(name='Cliente_Interno')
+            user.groups.add(group)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegistroClienteIn()
+    return render(request, 'registration/registroClienteI.html', {'form': form})
+
+def registroProductor(request):
+    if request.method == 'POST':
+        form = RegistroProductor(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            group = Group.objects.get(name='Productor_grupo')
+            user.groups.add(group)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegistroProductor()
+    return render(request, 'registration/registroProductor.html', {'form': form})
