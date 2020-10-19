@@ -17,14 +17,117 @@ from django.contrib.auth.models import Group
 def base(request):
     return render(request,'core/base.html')
 
+def ClientesExternos(request):
+    data = {
+        'ClientesExternos': listadoClientesE(),
+        'pais': listadoPais(),
+    }
+    if request.method == 'POST':
+        nie = request.POST.get('NIE')
+        nombre = request.POST.get('Nombre')
+        apellido = request.POST.get('Apellido')
+        email = request.POST.get('Email')
+        telefono = request.POST.get('Telefono')
+        id_pais = request.POST.get('Pais')
+        salida = Agregar_ClientesE(nie, nombre, apellido, telefono, email, id_pais)
+        if salida == 1:
+            data['mensaje'] = 'Agregado correctamente'
+            data['ClientesExternos'] = listadoClientesE()
+        else:
+            data['mensaje'] = 'No se ha podido guardar'
 
+    #Agregar_ClientesE('17837485748', 'Juan', 'Perez', 946372817, 'juanperez@gmail.com', 1)
+    return render(request, 'core/ClientesExternos.html', data)
+
+def Agregar_ClientesE(nie, nombre_cliex, apellido_cliex, telefono, email, id_pais):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_CLIENTESE", [nie, nombre_cliex, apellido_cliex, telefono, email, id_pais, salida])
+    return salida.getvalue()
+
+def listadoClientesE():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_CLIENTESE", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    
+    return lista
+
+def listadoPais():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_PAIS", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    
+    return lista
+
+def modificarClientesExternos(request, nie):
+    data = {
+        'ClientesExternos': listadoClientesE(),
+        'pais': listadoPais(),
+    }
+    if request.method == 'POST':
+        nie = request.POST.get('NIE')
+        nombre = request.POST.get('Nombre')
+        apellido = request.POST.get('Apellido')
+        email = request.POST.get('Email')
+        telefono = request.POST.get('Telefono')
+        id_pais = request.POST.get('Pais')
+        salida = modificarClienteE(nie, nombre, apellido, telefono, email, id_pais)
+        if salida == 1:
+            data['mensaje'] = 'Agregado correctamente'
+            data['ClientesExternos'] = listadoClientesE()
+        else:
+            data['mensaje'] = 'No se ha podido guardar'
+    return render(request, 'core/modificarClienteE.html', data)
+
+def modificarClienteE(nie, nombre_cliex, apellido_cliex, telefono, email, id_pais):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_ACTUALIZAR_CLIENTESE",[nie, nombre_cliex, apellido_cliex, telefono, email, id_pais, salida])
+    return salida.getvalue()
+
+def eliminaClienteE(nie):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_ELIMINAR_CLIENTESE", [nie, salida])
+    return salida.getvalue()
+
+def eliminarClienteE(request):
+    data = {
+        'ClientesExternos': listadoClientesE()
+    }
+
+    if request.method == 'POST':
+        nie = request.POST.get('NIE')
+        salida = eliminaCliente(nie)
+        if salida == 1:
+            data['mensaje'] = 'Cliente externo eliminado correctamente'
+        else:
+            data['mensaje'] = 'Cliente externo no se ha podido eliminar'
+        return redirect('core/base.html')
+    return render(request, 'core/eliminarClienteE.html', data)
+
+"""
 def eliminarClienteE(request, id):
     clienteE = ClienteExterno.objects.get(nie=id)
     clienteE.delete()
     
     return redirect(to= "ClientesExternos")
+"""
 
-
+"""
 def modificarClienteE(request,id):
     clienteE = ClienteExterno.objects.get(nie=id)
     data = {
@@ -36,20 +139,7 @@ def modificarClienteE(request,id):
             formulario.save()
             data['mensaje'] = "Modificado Correctamente"
             data['form'] = formulario
-    return render(request, 'core/modificarClienteE.html', data)
-
-def ClientesExternos(request): #Agregar y listar
-    clientesE = ClienteExterno.objects.all()
-    data = {
-        'form': ClienteExternoForm(),
-        'ClientesE': clientesE
-    }
-    if request.method == 'POST':
-        formulario = ClienteExternoForm(request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            data['mensaje'] = 'Guardado Correctamente'
-    return render(request, 'core/ClientesExternos.html', data)
+    return render(request, 'core/modificarClienteE.html', data)"""
 
 def eliminarClienteI(request,id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
@@ -85,6 +175,7 @@ def ClientesInternos(request): #Agregar y listar
             data['mensaje'] = 'Guardado Correctamente'
 
     return render(request, 'core/ClientesInternos.html', data)
+
 
 @permission_required('core.view_producto')
 def productos(request):

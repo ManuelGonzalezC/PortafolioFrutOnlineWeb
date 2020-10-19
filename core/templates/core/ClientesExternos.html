@@ -12,6 +12,67 @@
     <h2>Nuevo Cliente Externo</h2>
     <form action="" method="POST">
         {% csrf_token %}
+        <label for="">NIE</label>
+        <input type="text" name="NIE" id="NIE">
+        <br>
+        <label for="">Nombre</label>
+        <input type="text" name="Nombre">
+        <br>
+        <label for="">Apellido</label>
+        <input type="text" name="Apellido">
+        <br>
+        <label for="">Email</label>
+        <input type="text" name="Email">
+        <br>
+        <label for="">Telefono</label>
+        <input type="number" name="Telefono">
+        <br>
+        <label for="">Pais</label>
+        <Select name="Pais" id="pais">
+            <option value="">Seleccionar</option>
+            {% for p in pais %}
+                <option value="{{ p.0 }}">{{p.1}}</option>
+            {% endfor %}
+        </Select>
+        <br>
+        <input type="submit" value="Guardar">
+
+    </form>
+    {{ mensaje }}
+
+    <h2>Clientes Externos</h2>
+    <table>
+        <tr>
+            <th>NIE</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>País</th>
+        </tr>
+
+        {% for e in ClientesExternos %}
+
+        <tr>
+            <td>{{ e.0 }} </td>
+            <td>{{ e.1 }} </td>
+            <td>{{ e.2}}</td>
+            <td>{{ e.3 }}</td>
+            <td>{{ e.4 }}</td>
+            <td>{{ e.5 }}</td>
+            <td> <a href="{% url 'modificarClienteE' e.0 %}">Modificar</a></td>
+            <td> <a href="{% url 'eliminarClienteE' e.0 %}">Eliminar</a></td>
+        </tr>
+
+        {% endfor %}
+
+
+    </table>
+
+
+    <!--
+    <form action="" method="POST">
+        {% csrf_token %}
         <table>
             {{ form.as_table }}
             
@@ -49,6 +110,8 @@
         {% endfor %}
 
     </table>
+
+-->
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
