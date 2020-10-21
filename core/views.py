@@ -5,6 +5,7 @@ from .forms import *
 from .serializers import ProductoSerializer
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
+from .decorators import *
 from django.db import connection
 import cx_Oracle
 from .forms import SubastaForm, RegistroClienteEx
@@ -19,7 +20,7 @@ def base(request):
 
 
 
-
+@allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def eliminarClienteE(request, id):
     clienteE = ClienteExterno.objects.get(nie=id)
     clienteE.delete()
@@ -27,6 +28,7 @@ def eliminarClienteE(request, id):
     return redirect(to= "ClientesExternos")
 
 
+@allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def modificarClienteE(request,id):
     clienteE = ClienteExterno.objects.get(nie=id)
     data = {
@@ -40,6 +42,7 @@ def modificarClienteE(request,id):
             data['form'] = formulario
     return render(request, 'core/modificarClienteE.html', data)
 
+@allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def ClientesExternos(request): #Agregar y listar
     clientesE = ClienteExterno.objects.all()
     data = {
@@ -53,11 +56,14 @@ def ClientesExternos(request): #Agregar y listar
             data['mensaje'] = 'Guardado Correctamente'
     return render(request, 'core/ClientesExternos.html', data)
 
+
+@allowed_users(allowed_roles=['admin','Cliente_Interno'])
 def eliminarClienteI(request,id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
     ClientesI.delete()
     return redirect(to = 'ClientesInternos')
 
+@allowed_users(allowed_roles=['admin','Cliente_Interno'])
 def modificarClienteI(request, id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
     data = {
@@ -74,6 +80,7 @@ def modificarClienteI(request, id):
     return render(request, 'core/modificarClienteI.html', data)
 
 
+@allowed_users(allowed_roles=['admin','Cliente_Interno'])
 def ClientesInternos(request): #Agregar y listar
     ClientesI =ClienteInterno.objects.all()
     data = {
@@ -89,6 +96,7 @@ def ClientesInternos(request): #Agregar y listar
     return render(request, 'core/ClientesInternos.html', data)
 
 @permission_required('core.view_producto')
+@allowed_users(allowed_roles=['admin','Productor_grupo'])
 def productos(request):
     data = {
         'productos':listado_productos(),
@@ -116,6 +124,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer
 
 @permission_required('core.view_producto')
+@allowed_users(allowed_roles=['admin','Productor_grupo'])
 ## Procedimientos Almacenados
 def listado_productos():
     django_cursor = connection.cursor()
@@ -129,6 +138,7 @@ def listado_productos():
         lista.append(fila)
     return lista
 
+@allowed_users(allowed_roles=['admin','Productor_grupo'])
 def listado_categorias_fruta():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -141,6 +151,7 @@ def listado_categorias_fruta():
         lista.append(fila)
     return lista
 
+@allowed_users(allowed_roles=['admin','Productor_grupo'])
 def listado_idproductor_productos():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -154,6 +165,7 @@ def listado_idproductor_productos():
     return lista
 
 @permission_required('core.add_producto')
+@allowed_users(allowed_roles=['admin','Productor_grupo'])
 def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -162,6 +174,7 @@ def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     return salida.getvalue()
 
 @permission_required('core.view_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def list_subastas(request):
     subasta = Subasta.objects.all()
     data_sub = {
@@ -170,6 +183,7 @@ def list_subastas(request):
     return render(request,'core/list_subastas.html', data_sub)
 
 @permission_required('core.add_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def ingresar_subasta(request):
     data_sf = {
         'form':SubastaForm
@@ -183,6 +197,7 @@ def ingresar_subasta(request):
     return render(request, 'core/ingresar_subasta.html', data_sf)
 
 @permission_required('core.change_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def mod_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     data_mod = {
@@ -199,6 +214,7 @@ def mod_subasta(request, id):
     return render(request, 'core/mod_subastas.html', data_mod)
 
 @permission_required('core.delete_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def eliminar_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     subasta.delete()
@@ -244,11 +260,17 @@ def eliminar_productores(request, id):
 
      return redirect(to="listado_productores")
 
+
+
 def registroClienteEx(request):
     if request.method == 'POST':
         form = RegistroClienteEx(request.POST)
+        profile_form = ClienteExternoForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            profile = profile_form.save()
+            profile.user = user
+            profile.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -258,13 +280,18 @@ def registroClienteEx(request):
             return redirect('home')
     else:
         form = RegistroClienteEx()
-    return render(request, 'registration/registroClienteEx.html', {'form': form})
+        profile_form = ClienteExternoForm()
+    return render(request, 'registration/registroClienteEx.html', {'form': form, 'profile_form': profile_form})
 
 def registroClienteIn(request):
     if request.method == 'POST':
         form = RegistroClienteIn(request.POST)
+        profile_form = ClienteInternoForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            profile = profile_form.save()
+            profile.user = user
+            profile.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -274,20 +301,26 @@ def registroClienteIn(request):
             return redirect('home')
     else:
         form = RegistroClienteIn()
-    return render(request, 'registration/registroClienteI.html', {'form': form})
+        profile_form = ClienteInternoForm()
+    return render(request, 'registration/registroClienteI.html', {'form': form, 'profile_form': profile_form})
 
 def registroProductor(request):
     if request.method == 'POST':
         form = RegistroProductor(request.POST)
-        if form.is_valid():
-            form.save()
+        profile_form = ProductorForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
+            user = form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             group = Group.objects.get(name='Productor_grupo')
             user.groups.add(group)
             login(request, user)
-            return redirect('home')
+            return redirect('productos')
     else:
         form = RegistroProductor()
-    return render(request, 'registration/registroProductor.html', {'form': form})
+        profile_form = ProductorForm()
+    return render(request, 'registration/registroProductor.html', {'form': form, 'profile_form': profile_form})
