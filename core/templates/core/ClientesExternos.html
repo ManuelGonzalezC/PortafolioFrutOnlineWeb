@@ -12,44 +12,62 @@
     <h2>Nuevo Cliente Externo</h2>
     <form action="" method="POST">
         {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-            
-        </table>
-        <input type="reset" value="Limpiar">
+        <label for="">NIE</label>
+        <input type="text" name="nie" id="nie">
+        <br>
+        <label for="">Nombre</label>
+        <input type="text" name="Nombre">
+        <br>
+        <label for="">Apellido</label>
+        <input type="text" name="Apellido">
+        <br>
+        <label for="">Email</label>
+        <input type="text" name="Email">
+        <br>
+        <label for="">Telefono</label>
+        <input type="number" name="Telefono">
+        <br>
+        <label for="">Pais</label>
+        <Select name="Pais" id="pais">
+            <option value="">Seleccionar</option>
+            {% for p in pais %}
+                <option value="{{ p.0 }}">{{p.1}}</option>
+            {% endfor %}
+        </Select>
+        <br>
         <input type="submit" value="Guardar">
-    </form>
-    {{mensaje}}
 
-    <h2>Listado Cliente Externos</h2>
+    </form>
+    {{ mensaje }}
+
+    <h2>Clientes Externos</h2>
     <table>
         <tr>
-            <th>Nie</th>
+            <th>NIE</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Telefono</th>
-            <th>Email</th>            
-            <th>Pais</th>
-            <th>Opciones</th>
+            <th>Email</th>
+            <th>País</th>
         </tr>
 
-        {% for e in ClientesE %}
+        {% for e in ClientesExternos %}
 
         <tr>
-            <td>{{ e.nie }} </td>
-            <td>{{ e.nombre_cliex }}</td>
-            <td>{{ e.apellido_cliex }}</td>
-            <td>{{ e.telefono }}</td>
-            <td>{{ e.email }}</td>
-            <td>{{ e.id_pais }}</td>
-            <td> <a href="{% url 'modificarClienteE' e.nie %}">Modificar</a></td>
-            <td> <a href="{% url 'eliminarClienteE' e.nie %}">Eliminar</a></td>
+            <td>{{ e.0 }} </td>
+            <td>{{ e.1 }} </td>
+            <td>{{ e.2}}</td>
+            <td>{{ e.3 }}</td>
+            <td>{{ e.4 }}</td>
+            <td>{{ e.5 }}</td>
+            <td> <a href="{% url 'modificarClienteE' e.0 %}">Modificar</a></td>
+            <td> <a href="{% url 'eliminarClienteE' e.0 %}">Eliminar</a></td>
         </tr>
 
         {% endfor %}
 
-    </table>
 
+    </table>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>

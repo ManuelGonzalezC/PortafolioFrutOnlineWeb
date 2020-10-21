@@ -18,21 +18,126 @@ from django.contrib.auth.models import Group
 def base(request):
     return render(request,'core/base.html')
 
+def ClientesExternos(request):
+    data = {
+        'ClientesExternos': listadoClientesE(),
+        'pais': listadoPais(),
+    }
+    if request.method == 'POST':
+        nie = request.POST.get('nie')
+        nombre = request.POST.get('Nombre')
+        apellido = request.POST.get('Apellido')
+        email = request.POST.get('Email')
+        telefono = request.POST.get('Telefono')
+        id_pais = request.POST.get('Pais')
+        salida = Agregar_ClientesE(nie, nombre, apellido, telefono, email, id_pais)
+        if salida == 1:
+            data['mensaje'] = 'Agregado correctamente'
+            data['ClientesExternos'] = listadoClientesE()
+        else:
+            data['mensaje'] = 'No se ha podido guardar'
 
+    #Agregar_ClientesE('17837485748', 'Juan', 'Perez', 946372817, 'juanperez@gmail.com', 1)
+    return render(request, 'core/ClientesExternos.html', data)
+
+def Agregar_ClientesE(nie, nombre_cliex, apellido_cliex, telefono, email, id_pais):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_CLIENTESE", [nie, nombre_cliex, apellido_cliex, telefono, email, id_pais, salida])
+    return salida.getvalue()
+
+def listadoClientesE():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_CLIENTESE", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    
+    return lista
+
+def listadoPais():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_PAIS", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    
+    return lista
+"""
+def modificarClientesExternos(request, nie):
+    data = {
+        'ClientesExternos': listadoClientesE(),
+        'pais': listadoPais(),
+    }
+    if request.method == 'POST':
+        nie = request.POST.get('nie')
+        nombre = request.POST.get('Nombre')
+        apellido = request.POST.get('Apellido')
+        email = request.POST.get('Email')
+        telefono = request.POST.get('Telefono')
+        id_pais = request.POST.get('Pais')
+        salida = modificarClienteE(nie, nombre, apellido, telefono, email, id_pais)
+        if salida == 1:
+            data['mensaje'] = 'Modificado correctamente'
+            data['ClientesExternos'] = listadoClientesE()
+        else:
+            data['mensaje'] = 'No se ha podido modificar'
+    
+    return render(request, 'core/modificarClienteE.html', data) 
+"""
+"""
+def modificarClienteE(nie, nombre_cliex, apellido_cliex, telefono, email, id_pais):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_ACTUALIZAR_CLIENTESE",[nie, nombre_cliex, apellido_cliex, telefono, email, id_pais, salida])
+    return salida.getvalue()
+"""
+"""
+**************CON PROCEDIMIENTOS**********
+def eliminaClienteE(nie):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_ELIMINAR_CLIENTESE", [nie, salida])
+    return salida.getvalue() """
+
+"""def eliminarClienteE(request):
+    data = {
+        'ClientesExternos': listadoClientesE()
+    }
+
+    if request.method == 'POST':
+        nie = request.POST.get('NIE')
+        salida = eliminaCliente(nie)
+        if salida == 1:
+            data['mensaje'] = 'Cliente externo eliminado correctamente'
+        else:
+            data['mensaje'] = 'Cliente externo no se ha podido eliminar'
+        return redirect('core/base.html')
+    return render(request, 'core/eliminarClienteE.html', data) """
 
 @allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def eliminarClienteE(request, id):
     clienteE = ClienteExterno.objects.get(nie=id)
     clienteE.delete()
     
-    return redirect(to= "ClientesExternos")
+    return redirect(to= "ClientesExternos") 
 
 
 @allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def modificarClienteE(request,id):
     clienteE = ClienteExterno.objects.get(nie=id)
     data = {
-        'form': ClienteExternoForm(instance=clienteE)
+        'form': ClienteExternoForm(instance=clienteE),
+        'pais': listadoPais(),
     }
     if request.method == 'POST':
         formulario = ClienteExternoForm(request.POST, instance=clienteE)
@@ -42,6 +147,7 @@ def modificarClienteE(request,id):
             data['form'] = formulario
     return render(request, 'core/modificarClienteE.html', data)
 
+<<<<<<< HEAD
 @allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def ClientesExternos(request): #Agregar y listar
     clientesE = ClienteExterno.objects.all()
@@ -58,6 +164,8 @@ def ClientesExternos(request): #Agregar y listar
 
 
 @allowed_users(allowed_roles=['admin','Cliente_Interno'])
+=======
+>>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 def eliminarClienteI(request,id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
     ClientesI.delete()
@@ -95,8 +203,13 @@ def ClientesInternos(request): #Agregar y listar
 
     return render(request, 'core/ClientesInternos.html', data)
 
+<<<<<<< HEAD
 @permission_required('core.view_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
+=======
+
+#@permission_required('core.view_producto')
+>>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 def productos(request):
     data = {
         'productos':listado_productos(),
@@ -109,7 +222,7 @@ def productos(request):
         id_fruta = request.POST.get('tipofruta')
         precio = request.POST.get('precio')
         calidad = request.POST.get('calidad')
-        rut_productor = request('id_productor')
+        rut_productor = request.POST.get('id_productor')
         salida = agregar_producto(nombre,id_fruta,precio,calidad,rut_productor)
         if salida == 1:
             data['mensaje'] = 'Agregado Correctamente'
@@ -123,8 +236,12 @@ class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
+<<<<<<< HEAD
 @permission_required('core.view_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
+=======
+#@permission_required('core.view_producto')
+>>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 ## Procedimientos Almacenados
 def listado_productos():
     django_cursor = connection.cursor()
@@ -164,8 +281,12 @@ def listado_idproductor_productos():
         lista.append(fila)
     return lista
 
+<<<<<<< HEAD
 @permission_required('core.add_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
+=======
+#@permission_required('core.add_producto')
+>>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -173,6 +294,57 @@ def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     cursor.callproc("SP_AGREGAR_PRODUCTO",[nombre,id_fruta,precio,calidad,rut_productor, salida])
     return salida.getvalue()
 
+def modificarProducto(request,id):
+    producto = Producto.objects.get(id_producto=id)
+    data = {
+        'form': ProductoForm(instance=producto),
+        'productos':listado_productos(),
+        'tipo_fruta':listado_categorias_fruta(),
+        'id_productor':listado_idproductor_productos(),
+    }
+    if request.method == 'POST':
+        formulario = ProductoForm(request.POST, instance=producto)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = "Modificado Correctamente"
+            data['form'] = formulario
+    #return redirect(to = 'modificarProducto')
+    return render(request, 'core/modificarProducto.html', data)
+
+def eliminarProducto(request,id):
+    producto = Producto.objects.get(id_producto=id)
+    producto.delete()
+    return redirect(to = "productos")
+    
+
+"""def modificarProductos(request,id):
+    data = {
+        'productos':listado_productos(),
+        'tipo_fruta':listado_categorias_fruta(),
+        'id_productor':listado_idproductor_productos(),
+    }
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        tipo_fruta = request.POST.get('tipo_fruta')
+        precio = request.POST.get('precio')
+        calidad = request.POST.get('calidad')
+        id_productor = request.POST.get('id_productor')
+        salida = modificarProducto(nombre, tipo_fruta, precio, calidad, id_productor)
+        if salida == 1:
+            data['mensaje'] = 'Modificado correctamente'
+            data['productos'] = listado_productos()
+        else:
+            data['mensaje'] = 'No se ha podido modificar'
+    
+    return render(request, 'core/modificarProducto.html', data)
+
+def modificarProducto(nombre,tipo_fruta, precio, calidad, id_productor):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_ACTUALIZAR_PRODUCTO",[nombre,tipo_fruta, precio, calidad, id_productor, salida])
+    return salida.getvalue()
+"""
 @permission_required('core.view_subasta')
 @allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def list_subastas(request):
@@ -243,7 +415,10 @@ def nuevos_productores(request):
 def modificar_productores(request, id):
     productores = Productor.objects.get(rut_productor=id)
     data = {
-        'form': ProductorForm(instance=productores)
+        'form': ProductorForm(instance=productores),
+        'productos':listado_productos(),
+        'tipo_fruta':listado_categorias_fruta(),
+        'id_productor':listado_idproductor_productos(),
     }
 
     if request.method == "POST":

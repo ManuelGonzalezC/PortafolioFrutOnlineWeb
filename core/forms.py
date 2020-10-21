@@ -31,6 +31,11 @@ class ProductorForm(forms.ModelForm):
         model = Productor
         fields = ['rut_productor', 'nombre_productor', 'apellido_productor', 'telefono', 'email']
 
+class ProductoForm(ModelForm):
+    class Meta:
+        model = Producto
+        fields = ['id_producto', 'nombre', 'precio', 'calidad', 'id_fruta', 'rut_productor']
+
 class RegistroClienteEx(UserCreationForm):
     #nombre_cliex = forms.CharField(max_length=30, required=False, help_text='Ingrese su nombre')
     #apellido_cliex = forms.CharField(max_length=30, required=False, help_text='Ingrese su apellido')
