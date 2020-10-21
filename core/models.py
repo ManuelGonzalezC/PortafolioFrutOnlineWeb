@@ -152,6 +152,11 @@ class Producto(models.Model):
     class Meta:
         managed = False
         db_table = 'producto'
+    
+    def __str__(self):
+        return self.nombre
+
+    
 
 
 class ProductoSobrante(models.Model):

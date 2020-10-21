@@ -7,55 +7,17 @@
 </head>
 <body>
     <h2>Modificar Cliente externo</h2>
-
-    <form action="" method="POST">
-        {% csrf_token %}
-        <label for="">NIE</label>
-        <input type="text" name="NIE" id="NIE">
-        <br>
-        <label for="">Nombre</label>
-        <input type="text" name="Nombre">
-        <br>
-        <label for="">Apellido</label>
-        <input type="text" name="Apellido">
-        <br>
-        <label for="">Email</label>
-        <input type="text" name="Email">
-        <br>
-        <label for="">Telefono</label>
-        <input type="number" name="Telefono">
-        <br>
-        <label for="">Pais</label>
-        <Select name="Pais" id="pais">
-            <option value="">Seleccionar</option>
-            {% for p in pais %}
-                <option value="{{ p.0 }}">{{p.1}}</option>
-            {% endfor %}
-        </Select>
-        <br>
-        <input type="submit" value="Modificar">
-
-    </form>
-    {{ mensaje }}
-
-
-
-
-
-
-
-    <!-- 
+    
     <form action="" method="POST">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
             
         </table>
-        <input type="reset" value="Limpiar">
         <input type="submit" value="Modificar">
     </form>
 
     {{mensaje}}
-    -->
+    
 </body>
 </html>

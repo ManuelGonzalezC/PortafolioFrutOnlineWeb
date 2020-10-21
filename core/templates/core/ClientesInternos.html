@@ -12,6 +12,36 @@
     <h2>Nuevo Cliente Local</h2>
     <form action="" method="POST">
         {% csrf_token %}
+        <label for="">RUT</label>
+        <input type="text" name="RUT" id="RUT">
+        <br>
+        <label for="">Nombre</label>
+        <input type="text" name="Nombre">
+        <br>
+        <label for="">Apellido</label>
+        <input type="text" name="Apellido">
+        <br>
+        <label for="">Email</label>
+        <input type="text" name="Email">
+        <br>
+        <label for="">Telefono</label>
+        <input type="number" name="Telefono">
+        <br>
+        <label for="">Comuna</label>
+        <Select name="Comuna" id="Comuna">
+            <option value="">Seleccionar</option>
+            {% for p in pais %}
+                <option value="{{ p.0 }}">{{p.1}}</option>
+            {% endfor %}
+        </Select>
+        <br>
+        <input type="submit" value="Guardar">
+
+    </form>
+
+    <!--
+    <form action="" method="POST">
+        {% csrf_token %}
         <table>
             {{ form.as_table }}
             
@@ -54,6 +84,8 @@
         {% endfor %}
 
     </table>
+
+    -->
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>

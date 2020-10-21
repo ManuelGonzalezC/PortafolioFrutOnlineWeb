@@ -13,7 +13,7 @@
     <form action="" method="POST">
         {% csrf_token %}
         <label for="">NIE</label>
-        <input type="text" name="NIE" id="NIE">
+        <input type="text" name="nie" id="nie">
         <br>
         <label for="">Nombre</label>
         <input type="text" name="Nombre">
@@ -68,51 +68,6 @@
 
 
     </table>
-
-
-    <!--
-    <form action="" method="POST">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-            
-        </table>
-        <input type="reset" value="Limpiar">
-        <input type="submit" value="Guardar">
-    </form>
-    {{mensaje}}
-
-    <h2>Listado Cliente Externos</h2>
-    <table>
-        <tr>
-            <th>Nie</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Telefono</th>
-            <th>Email</th>            
-            <th>Pais</th>
-            <th>Opciones</th>
-        </tr>
-
-        {% for e in ClientesE %}
-
-        <tr>
-            <td>{{ e.nie }} </td>
-            <td>{{ e.nombre_cliex }}</td>
-            <td>{{ e.apellido_cliex }}</td>
-            <td>{{ e.telefono }}</td>
-            <td>{{ e.email }}</td>
-            <td>{{ e.id_pais }}</td>
-            <td> <a href="{% url 'modificarClienteE' e.nie %}">Modificar</a></td>
-            <td> <a href="{% url 'eliminarClienteE' e.nie %}">Eliminar</a></td>
-        </tr>
-
-        {% endfor %}
-
-    </table>
-
--->
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
