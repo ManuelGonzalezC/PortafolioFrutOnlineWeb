@@ -7,5 +7,20 @@
 </head>
 <body>
     <h2>Autenticación</h2>
+
+    <form action="" method="POST" class="forms-group">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table}}
+
+        </table>
+        
+        <input type="submit" value="Iniciar Sesión">
+    </form>
+    <h4>¿No tienes una cuenta?</h4>
+    <button><a href="{% url 'registroClienteEx' %}">Regístrate Cliente Externo</a></button>
+    <button><a href="{% url 'registroClienteI' %}">Regístrate Cliente Interno</a></button>
+    <button><a href="{% url 'registroProductor' %}">Regístrate Productor</a></button>
+    
 </body>
 </html>

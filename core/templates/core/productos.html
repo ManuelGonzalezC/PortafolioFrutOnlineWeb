@@ -62,9 +62,14 @@
                 <td>{{x.2}}</td>
                 <td>{{x.3}}</td>
                 <td>{{x.4}}</td>
+<<<<<<< HEAD
                 <td>
                     <a href="{% url 'eliminar_producto' x.0 %}">Eliminar</a>
                 </td>
+=======
+                <td> <a href="{% url 'modificarProducto' x.0 %}">Modificar</a></td>
+                <td> <a href="{% url 'eliminarProducto' x.0 %}">Eliminar</a></td>
+>>>>>>> master
             </tr>
         {% endfor %}
     </table>
