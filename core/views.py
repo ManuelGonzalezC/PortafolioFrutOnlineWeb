@@ -147,7 +147,6 @@ def modificarClienteE(request,id):
             data['form'] = formulario
     return render(request, 'core/modificarClienteE.html', data)
 
-<<<<<<< HEAD
 @allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def ClientesExternos(request): #Agregar y listar
     clientesE = ClienteExterno.objects.all()
@@ -164,8 +163,6 @@ def ClientesExternos(request): #Agregar y listar
 
 
 @allowed_users(allowed_roles=['admin','Cliente_Interno'])
-=======
->>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 def eliminarClienteI(request,id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
     ClientesI.delete()
@@ -203,13 +200,10 @@ def ClientesInternos(request): #Agregar y listar
 
     return render(request, 'core/ClientesInternos.html', data)
 
-<<<<<<< HEAD
 @permission_required('core.view_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
-=======
 
 #@permission_required('core.view_producto')
->>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 def productos(request):
     data = {
         'productos':listado_productos(),
@@ -236,12 +230,9 @@ class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
-<<<<<<< HEAD
 @permission_required('core.view_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
-=======
 #@permission_required('core.view_producto')
->>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 ## Procedimientos Almacenados
 def listado_productos():
     django_cursor = connection.cursor()
@@ -281,12 +272,8 @@ def listado_idproductor_productos():
         lista.append(fila)
     return lista
 
-<<<<<<< HEAD
 @permission_required('core.add_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
-=======
-#@permission_required('core.add_producto')
->>>>>>> 5cc2f4912ec8c34f015e1d3265760e8e73262060
 def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -500,11 +487,15 @@ def registroProductor(request):
         profile_form = ProductorForm()
     return render(request, 'registration/registroProductor.html', {'form': form, 'profile_form': profile_form})
 
+@permission_required('core.view_solicitud compra ext')
+@allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def list_solicitud_ext(request):
     solicitud_ext = SolicitudCompraExt.objects.all()
     data = {'solicitud_ext': solicitud_ext}
     return render(request, 'core/list_solicitudes_ext.html', data)
 
+@permission_required('core.add_solicitud compra ext')
+@allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def ingresar_solicitud_ext(request):
     data = {
         'form': SolicitudExtForm()
@@ -514,5 +505,5 @@ def ingresar_solicitud_ext(request):
         if formulario.is_valid():
             formulario.save()
             data['mensaje'] = "Solicitud guardada correctamente"
-    return render(request, 'core/ingresar_solicitud_ext.html', data)
 
+    return render(request, 'core/ingresar_solicitud_ext.html', data)
