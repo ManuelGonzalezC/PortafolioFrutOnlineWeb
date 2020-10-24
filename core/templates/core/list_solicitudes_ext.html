@@ -1,0 +1,21 @@
+<h2>Listado de Compras Externas</h2>
+
+<table>
+    <tr>
+        <th>ID Solicitud Externa</th>
+        <th>Presupuesto</th>
+        <th>ID Producto</th>
+        <th>Nie</th>
+        <th>ID Fruta</th>
+    </tr>
+
+    {% for s in solicitud_ext %}
+    <tr>
+        <td>{{s.id_solicitud}}</td>
+        <td>{{s.presupuesto}}</td>
+        <td>{{s.id_producto}}</td>
+        <td>{{s.nie}}</td>
+        <td>{{s.id_fruta}}</td>
+    </tr>
+    {% endfor %}
+</table>
