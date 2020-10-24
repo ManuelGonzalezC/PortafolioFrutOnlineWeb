@@ -62,3 +62,9 @@ class RegistroProductor(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2']
+
+class SolicitudExtForm(ModelForm):
+    class Meta:
+        model = SolicitudCompraExt
+        fields = ['id_solicitud', 'presupuesto', 'id_producto', 'nie', 'id_fruta']
+

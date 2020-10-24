@@ -324,3 +324,20 @@ def registroProductor(request):
         form = RegistroProductor()
         profile_form = ProductorForm()
     return render(request, 'registration/registroProductor.html', {'form': form, 'profile_form': profile_form})
+
+def list_solicitud_ext(request):
+    solicitud_ext = SolicitudCompraExt.objects.all()
+    data = {'solicitud_ext': solicitud_ext}
+    return render(request, 'core/list_solicitudes_ext.html', data)
+
+def ingresar_solicitud_ext(request):
+    data = {
+        'form': SolicitudExtForm()
+    }
+    if request.method == 'POST':
+        formulario = SolicitudExtForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = "Solicitud guardada correctamente"
+    return render(request, 'core/ingresar_solicitud_ext.html', data)
+
