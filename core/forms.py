@@ -36,6 +36,11 @@ class ProductoForm(ModelForm):
         model = Producto
         fields = ['id_producto', 'nombre', 'precio', 'calidad', 'id_fruta', 'rut_productor']
 
+class TransportistaForm(forms.ModelForm):
+    class Meta:
+        model = Transportista
+        fields = ['rut_transportista', 'nombre_transportista', 'apellido_transportista', 'telefono', 'email']
+
 class RegistroClienteEx(UserCreationForm):
     #nombre_cliex = forms.CharField(max_length=30, required=False, help_text='Ingrese su nombre')
     #apellido_cliex = forms.CharField(max_length=30, required=False, help_text='Ingrese su apellido')
@@ -64,6 +69,11 @@ class RegistroProductor(UserCreationForm):
     #telefono_productor = forms.CharField(max_length=10, required=False, validators=[telefono_int], help_text='Ingrese su número de contacto')
     #correo_productor = forms.EmailField(max_length=254, help_text='Ingrese un correo válido')
     
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+
+class RegistroTransportista(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2']

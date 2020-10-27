@@ -33,5 +33,6 @@ urlpatterns = [
     path('registroClienteI/', registroClienteIn, name='registroClienteI'),
     path('registroProductor/', registroProductor, name='registroProductor'),
     path('list_solicitud_ext/', list_solicitud_ext, name='list_solicitud_ext'),
-    path('ingresar_solicitud_ext/', ingresar_solicitud_ext, name='ingresar_solicitud_ext')
+    path('ingresar_solicitud_ext/', ingresar_solicitud_ext, name='ingresar_solicitud_ext'),
+    path('registroTransportista/', registroTransportista, name='registroTransportista')
 ]

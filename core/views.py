@@ -487,6 +487,28 @@ def registroProductor(request):
         profile_form = ProductorForm()
     return render(request, 'registration/registroProductor.html', {'form': form, 'profile_form': profile_form})
 
+@allowed_users(allowed_roles=['admin'])
+def registroTransportista(request):
+    if request.method == 'POST':
+        form = RegistroTransportista(request.POST)
+        profile_form = TransportistaForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
+            user = form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            group = Group.objects.get(name='Transportista_grupo')
+            user.groups.add(group)
+            login(request, user)
+            return redirect('list_subastas')
+    else:
+        form = RegistroTransportista()
+        profile_form = TransportistaForm()
+    return render(request, 'registration/registroTransportista.html', {'form': form, 'profile_form': profile_form})
+
 @permission_required('core.view_solicitud compra ext')
 @allowed_users(allowed_roles=['admin','Cliente_Externo'])
 def list_solicitud_ext(request):

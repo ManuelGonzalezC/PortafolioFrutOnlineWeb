@@ -21,6 +21,9 @@
     <button><a href="{% url 'registroClienteEx' %}">Regístrate Cliente Externo</a></button>
     <button><a href="{% url 'registroClienteI' %}">Regístrate Cliente Interno</a></button>
     <button><a href="{% url 'registroProductor' %}">Regístrate Productor</a></button>
+    {% if user.is_superuser %}
+    <button><a href="{% url 'registroTransportista' %}">Registrar Transportista</a></button>
+    {% endif %}
     
 </body>
 </html>

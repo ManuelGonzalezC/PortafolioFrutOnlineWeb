@@ -251,6 +251,7 @@ class TransporteFinal(models.Model):
 
 
 class Transportista(models.Model):
+    #user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
     rut_transportista = models.CharField(primary_key=True, max_length=10)
     nombre_transportista = models.CharField(max_length=25)
     apellido_transportista = models.CharField(max_length=25)
