@@ -8,11 +8,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from .decorators import *
 from django.db import connection
 import cx_Oracle
-from .forms import SubastaForm, RegistroClienteEx
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
-
-
 
 
 def base(request):
@@ -70,7 +67,7 @@ def listadoPais():
         lista.append(fila)
     
     return lista
-"""
+
 def modificarClientesExternos(request, nie):
     data = {
         'ClientesExternos': listadoClientesE(),
@@ -91,25 +88,24 @@ def modificarClientesExternos(request, nie):
             data['mensaje'] = 'No se ha podido modificar'
     
     return render(request, 'core/modificarClienteE.html', data) 
-"""
-"""
+
 def modificarClienteE(nie, nombre_cliex, apellido_cliex, telefono, email, id_pais):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_ACTUALIZAR_CLIENTESE",[nie, nombre_cliex, apellido_cliex, telefono, email, id_pais, salida])
     return salida.getvalue()
-"""
-"""
-**************CON PROCEDIMIENTOS**********
+
+
+#**************CON PROCEDIMIENTOS**********
 def eliminaClienteE(nie):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_ELIMINAR_CLIENTESE", [nie, salida])
-    return salida.getvalue() """
+    return salida.getvalue()
 
-"""def eliminarClienteE(request):
+def eliminarClienteE(request):
     data = {
         'ClientesExternos': listadoClientesE()
     }
@@ -122,9 +118,9 @@ def eliminaClienteE(nie):
         else:
             data['mensaje'] = 'Cliente externo no se ha podido eliminar'
         return redirect('core/base.html')
-    return render(request, 'core/eliminarClienteE.html', data) """
+    return render(request, 'core/eliminarClienteE.html', data)
 
-@allowed_users(allowed_roles=['admin','Cliente_Externo'])
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def eliminarClienteE(request, id):
     clienteE = ClienteExterno.objects.get(nie=id)
     clienteE.delete()
@@ -132,7 +128,7 @@ def eliminarClienteE(request, id):
     return redirect(to= "ClientesExternos") 
 
 
-@allowed_users(allowed_roles=['admin','Cliente_Externo'])
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def modificarClienteE(request,id):
     clienteE = ClienteExterno.objects.get(nie=id)
     data = {
@@ -147,7 +143,7 @@ def modificarClienteE(request,id):
             data['form'] = formulario
     return render(request, 'core/modificarClienteE.html', data)
 
-@allowed_users(allowed_roles=['admin','Cliente_Externo'])
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def ClientesExternos(request): #Agregar y listar
     clientesE = ClienteExterno.objects.all()
     data = {
@@ -162,13 +158,13 @@ def ClientesExternos(request): #Agregar y listar
     return render(request, 'core/ClientesExternos.html', data)
 
 
-@allowed_users(allowed_roles=['admin','Cliente_Interno'])
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
 def eliminarClienteI(request,id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
     ClientesI.delete()
     return redirect(to = 'ClientesInternos')
 
-@allowed_users(allowed_roles=['admin','Cliente_Interno'])
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
 def modificarClienteI(request, id):
     ClientesI = ClienteInterno.objects.get(rut_clii=id)
     data = {
@@ -185,7 +181,7 @@ def modificarClienteI(request, id):
     return render(request, 'core/modificarClienteI.html', data)
 
 
-@allowed_users(allowed_roles=['admin','Cliente_Interno'])
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
 def ClientesInternos(request): #Agregar y listar
     ClientesI =ClienteInterno.objects.all()
     data = {
@@ -303,8 +299,7 @@ def eliminarProducto(request,id):
     producto.delete()
     return redirect(to = "productos")
     
-
-"""def modificarProductos(request,id):
+def modificarProductos(request,id):
     data = {
         'productos':listado_productos(),
         'tipo_fruta':listado_categorias_fruta(),
@@ -331,7 +326,7 @@ def modificarProducto(nombre,tipo_fruta, precio, calidad, id_productor):
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_ACTUALIZAR_PRODUCTO",[nombre,tipo_fruta, precio, calidad, id_productor, salida])
     return salida.getvalue()
-"""
+
 @permission_required('core.view_subasta')
 @allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def list_subastas(request):
@@ -386,6 +381,7 @@ def listado_productores(request):
     }
     return render(request, 'core/listado_productores.html', data)
 
+
 def nuevos_productores(request):
     data = {
         'form': ProductorForm()
@@ -422,8 +418,6 @@ def eliminar_productores(request, id):
 
      return redirect(to="listado_productores")
 
-
-
 def registroClienteEx(request):
     if request.method == 'POST':
         form = RegistroClienteEx(request.POST)
@@ -436,7 +430,7 @@ def registroClienteEx(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            group = Group.objects.get(name='Cliente_Externo')
+            group = Group.objects.get(name='Cliente_Externo_grupo')
             user.groups.add(group)
             login(request, user)
             return redirect('home')
@@ -457,7 +451,7 @@ def registroClienteIn(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            group = Group.objects.get(name='Cliente_Interno')
+            group = Group.objects.get(name='Cliente_Interno_grupo')
             user.groups.add(group)
             login(request, user)
             return redirect('home')
@@ -510,22 +504,25 @@ def registroTransportista(request):
     return render(request, 'registration/registroTransportista.html', {'form': form, 'profile_form': profile_form})
 
 @permission_required('core.view_solicitud compra ext')
-@allowed_users(allowed_roles=['admin','Cliente_Externo'])
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def list_solicitud_ext(request):
     solicitud_ext = SolicitudCompraExt.objects.all()
     data = {'solicitud_ext': solicitud_ext}
     return render(request, 'core/list_solicitudes_ext.html', data)
 
 @permission_required('core.add_solicitud compra ext')
-@allowed_users(allowed_roles=['admin','Cliente_Externo'])
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def ingresar_solicitud_ext(request):
     data = {
         'form': SolicitudExtForm()
     }
     if request.method == 'POST':
         formulario = SolicitudExtForm(request.POST)
-        if formulario.is_valid():
+        if formulario.is_valid() and SolicitudCompraExt:
             formulario.save()
             data['mensaje'] = "Solicitud guardada correctamente"
 
     return render(request, 'core/ingresar_solicitud_ext.html', data)
+
+def mainPage_Externos(request):
+    return render(request, 'core/mainPage_Externos.html')
