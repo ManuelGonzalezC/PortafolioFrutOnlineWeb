@@ -7,14 +7,16 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 
 class ClienteExterno(models.Model):
+    #user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     nie = models.BigIntegerField(primary_key=True)
     nombre_cliex = models.CharField(max_length=25)
     apellido_cliex = models.CharField(max_length=25)
     telefono = models.BigIntegerField()
-    email = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
     id_pais = models.ForeignKey('Pais', models.DO_NOTHING, db_column='id_pais')
 
     class Meta:
@@ -22,12 +24,14 @@ class ClienteExterno(models.Model):
         db_table = 'cliente_externo'
 
 
+
 class ClienteInterno(models.Model):
+    #user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
     rut_clii = models.CharField(primary_key=True, max_length=10)
     nombre_clii = models.CharField(max_length=25)
     apellido_clii = models.CharField(max_length=25)
     telefono = models.BigIntegerField()
-    email = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
     direccion = models.CharField(max_length=255)
     id_comuna = models.ForeignKey('ComunaLocal', models.DO_NOTHING, db_column='id_comuna')
 
@@ -172,11 +176,12 @@ class ProductoSobrante(models.Model):
 
 
 class Productor(models.Model):
+    #user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
     rut_productor = models.CharField(primary_key=True, max_length=10)
     nombre_productor = models.CharField(max_length=25)
     apellido_productor = models.CharField(max_length=25)
     telefono = models.BigIntegerField()
-    email = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
 
     class Meta:
         managed = False
@@ -250,7 +255,7 @@ class Transportista(models.Model):
     nombre_transportista = models.CharField(max_length=25)
     apellido_transportista = models.CharField(max_length=25)
     telefono = models.BigIntegerField()
-    email = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
 
     class Meta:
         managed = False
