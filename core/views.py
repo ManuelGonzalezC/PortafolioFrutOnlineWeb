@@ -575,5 +575,7 @@ def ingresar_solicitud_ext(request):
 
     return render(request, 'core/ingresar_solicitud_ext.html', data)
 
+@permission_required('core.add_solicitud compra ext')
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def mainPage_Externos(request):
     return render(request, 'core/mainPage_Externos.html')
