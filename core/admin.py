@@ -9,4 +9,5 @@ admin.site.register(Fruta)
 admin.site.register(Subasta)
 admin.site.register(ClienteExterno)
 admin.site.register(Productor)
+admin.site.register(SolicitudCompraExt)
 

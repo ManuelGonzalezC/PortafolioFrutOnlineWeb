@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+
 {% block navbar %}
  
 <a class="nav-link active" href="{% url 'index' %}">Inicio <span class="sr-only">(current)</span></a>
@@ -14,11 +15,19 @@
 
 
 {% block content %}
-  <h2>Registro de Cliente Externo</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ profile_form.as_p }}
-    <button type="submit" class="btn btn-success">Registrarse</button>
-  </form>
+<div class="col-md-auto">
+<h4 class="text-center">¿Quieres comprar?</h4>
+<br>
+<h4 class="text-center">Llena este formulario</h4>
+<br>
+<div class="col text-center">
+<a href="{% url 'ingresar_solicitud_ext' %}" class="btn btn-success mx-auto">Entrar</a>
+</div>
+<br>
+<h4 class="text-center">Revisar Estado de compra</h4>
+<br>
+<div class="col text-center">
+<a href="{% url 'list_solicitud_ext' %}" class="btn btn-success mx-auto ">Entrar</a>
+</div>
+</div>
 {% endblock %}

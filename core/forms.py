@@ -20,11 +20,13 @@ class ClienteInternoForm(forms.ModelForm):
     class Meta:
         model = ClienteInterno
         fields = ['rut_clii', 'nombre_clii', 'apellido_clii', 'telefono', 'email', 'direccion', 'id_comuna']
+       
 
 class ClienteExternoForm(forms.ModelForm):
     class Meta:
         model = ClienteExterno
         fields = ['nie', 'nombre_cliex', 'apellido_cliex','telefono','email', 'id_pais']
+
 
 class ProductorForm(forms.ModelForm):
     class Meta:
@@ -35,6 +37,11 @@ class ProductoForm(ModelForm):
     class Meta:
         model = Producto
         fields = ['id_producto', 'nombre', 'precio', 'calidad', 'id_fruta', 'rut_productor']
+
+class TransportistaForm(forms.ModelForm):
+    class Meta:
+        model = Transportista
+        fields = ['rut_transportista', 'nombre_transportista', 'apellido_transportista', 'telefono', 'email']
 
 class RegistroClienteEx(UserCreationForm):
     #nombre_cliex = forms.CharField(max_length=30, required=False, help_text='Ingrese su nombre')
@@ -67,3 +74,14 @@ class RegistroProductor(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2']
+
+class RegistroTransportista(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+
+class SolicitudExtForm(ModelForm):
+    class Meta:
+        model = SolicitudCompraExt
+        fields = ['id_solicitud', 'presupuesto', 'id_producto', 'nie', 'id_fruta']
+

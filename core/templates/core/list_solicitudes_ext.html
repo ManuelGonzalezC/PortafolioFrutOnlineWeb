@@ -1,3 +1,4 @@
+
 {% extends 'core/base.html' %}
 {% block navbar %}
  
@@ -12,13 +13,37 @@
        {% endif %}
 {% endblock %}
 
-
 {% block content %}
-  <h2>Registro de Cliente Externo</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ profile_form.as_p }}
-    <button type="submit" class="btn btn-success">Registrarse</button>
-  </form>
+<div>
+    <div>
+<a class="btn btn-success" href="{% url 'ingresar_solicitud_ext' %}">Nueva Solicitud</a>
+</div>
+<br>
+<div>
+<h5>Estado de Solicitudes</h5>
+</div>
+</div>
+<br>
+<table class ="table">
+    <tr>
+        <th scope="col">ID Solicitud Externa</th>
+        <th scope="col">Presupuesto</th>
+        <th scope="col">ID Producto</th>
+        <th scope="col">Nie</th>
+        <th scope="col">ID Fruta</th>
+        <th scope="col">Estado</th>
+    </tr>
+
+    {% for s in solicitud_ext %}
+    <tr>
+        <td>{{s.id_solicitud}}</td>
+        <td>{{s.presupuesto}}</td>
+        <td>{{s.id_producto}}</td>
+        <td>{{s.nie}}</td>
+        <td>{{s.id_fruta}}</td>
+        <td>{{s.id_estado}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 {% endblock %}
