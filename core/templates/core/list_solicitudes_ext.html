@@ -24,26 +24,15 @@
 </div>
 </div>
 <br>
-<table class ="table">
-    <tr>
-        <th scope="col">ID Solicitud Externa</th>
-        <th scope="col">Presupuesto</th>
-        <th scope="col">ID Producto</th>
-        <th scope="col">Nie</th>
-        <th scope="col">ID Fruta</th>
-        <th scope="col">Estado</th>
-    </tr>
 
+<ul class="list-group list-group">
     {% for s in solicitud_ext %}
-    <tr>
-        <td>{{s.id_solicitud}}</td>
-        <td>{{s.presupuesto}}</td>
-        <td>{{s.id_producto}}</td>
-        <td>{{s.nie}}</td>
-        <td>{{s.id_fruta}}</td>
-        <td>{{s.id_estado}}</td>
-    </tr>
+    <li class="list-group-item">  
+ID:  {{s.id_solicitud}} Presupuesto: ${{s.presupuesto}} Fruta: {{s.id_producto}} Productor: {{s.nie}} Tipo de Fruta: {{s.id_fruta}} 
+Estado: <button type="button" class="btn btn-info">{{s.id_estado}}</button>
+
+    </li>
     {% endfor %}
-</table>
+  </ul>
 
 {% endblock %}

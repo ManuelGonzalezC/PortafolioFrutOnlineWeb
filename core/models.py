@@ -97,6 +97,9 @@ class ClienteExterno(models.Model):
         managed = False
         db_table = 'cliente_externo'
 
+    def __str__(self):
+        return self.nombre_cliex
+
 
 class ClienteInterno(models.Model):
     rut_clii = models.CharField(primary_key=True, max_length=10)
@@ -132,6 +135,8 @@ class Contrato(models.Model):
     class Meta:
         managed = False
         db_table = 'contrato'
+
+    
 
 
 class DjangoAdminLog(models.Model):
@@ -290,6 +295,9 @@ class Producto(models.Model):
         managed = False
         db_table = 'producto'
 
+    def __str__(self):
+        return self.nombre
+
 
 class ProductoSobrante(models.Model):
     id_produs = models.BigAutoField(primary_key=True)
@@ -349,10 +357,10 @@ class ReporteLocal(models.Model):
 class SolicitudCompraExt(models.Model):
     id_solicitud = models.BigAutoField(primary_key=True)
     presupuesto = models.BigIntegerField()
-    id_producto = models.BigIntegerField()
-    nie = models.ForeignKey(ClienteExterno, models.DO_NOTHING, db_column='nie')
-    id_fruta = models.ForeignKey(Fruta, models.DO_NOTHING, db_column='id_fruta')
-    id_estado = models.ForeignKey(Estado, models.DO_NOTHING, db_column='id_estado')
+    id_producto = models.BigIntegerField(verbose_name="Producto")
+    nie = models.ForeignKey(ClienteExterno, models.DO_NOTHING, db_column='nie',verbose_name="Cliente Externo")
+    id_fruta = models.ForeignKey(Fruta, models.DO_NOTHING, db_column='id_fruta', verbose_name="Tipo de Fruta")
+    id_estado = models.ForeignKey(Estado, models.DO_NOTHING, db_column='id_estado', default='1')
 
     class Meta:
         managed = False
@@ -362,7 +370,7 @@ class SolicitudCompraExt(models.Model):
 class Subasta(models.Model):
     id_subasta = models.BigAutoField(primary_key=True)
     costo_transporte = models.BigIntegerField()
-    rut_transportista = models.ForeignKey('Transportista', models.DO_NOTHING, db_column='rut_transportista')
+    rut_transportista = models.ForeignKey('Transportista', models.DO_NOTHING, db_column='rut_transportista', verbose_name="Transportista ")
 
     class Meta:
         managed = False
@@ -390,6 +398,9 @@ class Transportista(models.Model):
     class Meta:
         managed = False
         db_table = 'transportista'
+
+    def __str__(self):
+        return self.nombre_transportista
 
 
 class Vehiculo(models.Model):

@@ -9,7 +9,7 @@ from .decorators import *
 from django.db import connection
 import cx_Oracle
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
 
 
@@ -140,7 +140,6 @@ def ClientesInternos(request): #Agregar y listar
 
     return render(request, 'core/ClientesInternos.html', data)
 
-
 @permission_required('core.view_producto')
 @allowed_users(allowed_roles=['admin','Productor_grupo'])
 
@@ -175,8 +174,8 @@ class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
-@permission_required('core.view_producto')
-@allowed_users(allowed_roles=['admin','Productor_grupo'])
+#@permission_required('core.view_producto')
+
 #@permission_required('core.view_producto')
 ## Procedimientos Almacenados
 def listado_productos():
@@ -191,7 +190,7 @@ def listado_productos():
         lista.append(fila)
     return lista
 
-@allowed_users(allowed_roles=['admin','Productor_grupo'])
+
 def listado_categorias_fruta():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -204,7 +203,7 @@ def listado_categorias_fruta():
         lista.append(fila)
     return lista
 
-@allowed_users(allowed_roles=['admin','Productor_grupo'])
+
 def listado_idproductor_productos():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -217,8 +216,8 @@ def listado_idproductor_productos():
         lista.append(fila)
     return lista
 
-@permission_required('core.add_producto')
-@allowed_users(allowed_roles=['admin','Productor_grupo'])
+#@permission_required('core.add_producto')
+
 def agregar_producto(nombre,id_fruta,precio,calidad,rut_productor):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -254,8 +253,8 @@ def eliminarProducto(request,id):
     return redirect(to = "productos")
     
 
-#@permission_required('core.view_subasta')
-#@allowed_users(allowed_roles=['admin','Transportista_grupo'])
+@permission_required('core.view_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def list_subastas(request):
     subasta = Subasta.objects.all()
     data_sub = {
@@ -263,8 +262,8 @@ def list_subastas(request):
     }
     return render(request,'core/list_subastas.html', data_sub)
 
-#@permission_required('core.add_subasta')
-#@allowed_users(allowed_roles=['admin','Transportista_grupo'])
+@permission_required('core.add_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def ingresar_subasta(request):
     data_sf = {
         'form':SubastaForm
@@ -277,8 +276,8 @@ def ingresar_subasta(request):
 
     return render(request, 'core/ingresar_subasta.html', data_sf)
 
-#@permission_required('core.change_subasta')
-#@allowed_users(allowed_roles=['admin','Transportista_grupo'])
+@permission_required('core.change_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def mod_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     data_mod = {
@@ -294,8 +293,8 @@ def mod_subasta(request, id):
 
     return render(request, 'core/mod_subastas.html', data_mod)
 
-#@permission_required('core.delete_subasta')
-#@allowed_users(allowed_roles=['admin','Transportista_grupo'])
+@permission_required('core.delete_subasta')
+@allowed_users(allowed_roles=['admin','Transportista_grupo'])
 def eliminar_subasta(request, id):
     subasta = Subasta.objects.get(id_subasta=id)
     subasta.delete()
@@ -357,10 +356,25 @@ def registroClienteEx(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            group = Group.objects.get(name='Cliente_Externo_grupo')
-            user.groups.add(group)
+            g_clien_Ex, creado = Group.objects.get_or_create(name='Cliente_Externo_grupo')
+            permiso1, c1 = Permission.objects.get_or_create(name='Can add estado')
+            permiso2, c2 = Permission.objects.get_or_create(name='Can view estado')
+            permiso3, c3 = Permission.objects.get_or_create(name='Can add fruta')
+            permiso4, c4 = Permission.objects.get_or_create(name='Can change fruta')
+            permiso5, c5 = Permission.objects.get_or_create(name='Can delete fruta')
+            permiso6, c6 = Permission.objects.get_or_create(name='Can view fruta')
+            permiso7, c7 = Permission.objects.get_or_create(name='Can add proceso venta ex')
+            permiso8, c8 = Permission.objects.get_or_create(name='Can view proceso venta ex')
+            permiso9, c9 = Permission.objects.get_or_create(name='Can add producto')
+            permiso10, c10 = Permission.objects.get_or_create(name='Can view producto')
+            permiso11, c11 = Permission.objects.get_or_create(name='Can add solicitud compra ext')
+            permiso12, c12 = Permission.objects.get_or_create(name='Can view solicitud compra ext')
+            permiso13, c13 = Permission.objects.get_or_create(name='Can change solicitud compra ext')
+            permiso14, c14 = Permission.objects.get_or_create(name='Can delete solicitud compra ext')
+            g_clien_Ex.permissions.add(permiso1, permiso2, permiso3, permiso4, permiso5, permiso6, permiso7, permiso8, permiso9, permiso10, permiso11, permiso12, permiso13, permiso14)
+            user.groups.add(g_clien_Ex)
             login(request, user)
-            return redirect('home')
+            return redirect('index')
     else:
         form = RegistroClienteEx()
         profile_form = ClienteExternoForm()
@@ -378,8 +392,19 @@ def registroClienteIn(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            group = Group.objects.get(name='Cliente_Interno_grupo')
-            user.groups.add(group)
+            g_clien_In, creado = Group.objects.get_or_create(name='Cliente_Interno_grupo')
+            permiso1, c1 = Permission.objects.get_or_create(name='Can add fruta')
+            permiso2, c2 = Permission.objects.get_or_create(name='Can change fruta')
+            permiso3, c3 = Permission.objects.get_or_create(name='Can delete fruta')
+            permiso4, c4 = Permission.objects.get_or_create(name='Can view fruta')
+            permiso5, c5 = Permission.objects.get_or_create(name='Can add proceso venta local')
+            permiso6, c6 = Permission.objects.get_or_create(name='Can change proceso venta local')
+            permiso7, c7 = Permission.objects.get_or_create(name='Can delete proceso venta local')
+            permiso8, c8 = Permission.objects.get_or_create(name='Can view proceso venta local')
+            permiso9, c9 = Permission.objects.get_or_create(name='Can add producto sobrante')
+            permiso10, c10 = Permission.objects.get_or_create(name='Can view producto sobrante')
+            g_clien_In.permissions.add(permiso1, permiso2, permiso3, permiso4, permiso5, permiso6, permiso7, permiso8, permiso9, permiso10)
+            user.groups.add(g_clien_In)
             login(request, user)
             return redirect('home')
     else:
@@ -399,8 +424,21 @@ def registroProductor(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            group = Group.objects.get(name='Productor_grupo')
-            user.groups.add(group)
+            g_prod, creado = Group.objects.get_or_create(name='Productor_grupo')
+            permiso1, c1 = Permission.objects.get_or_create(name='Can add fruta')
+            permiso2, c2 = Permission.objects.get_or_create(name='Can change fruta')
+            permiso3, c3 = Permission.objects.get_or_create(name='Can delete fruta')
+            permiso4, c4 = Permission.objects.get_or_create(name='Can view fruta')
+            permiso5, c5 = Permission.objects.get_or_create(name='Can add producto')
+            permiso6, c6 = Permission.objects.get_or_create(name='Can change producto')
+            permiso7, c7 = Permission.objects.get_or_create(name='Can delete producto')
+            permiso8, c8 = Permission.objects.get_or_create(name='Can view producto')
+            permiso9, c9 = Permission.objects.get_or_create(name='Can add producto sobrante')
+            permiso10, c10 = Permission.objects.get_or_create(name='Can change producto sobrante')
+            permiso11, c11 = Permission.objects.get_or_create(name='Can delete producto sobrante')
+            permiso12, c12 = Permission.objects.get_or_create(name='Can view producto sobrante')
+            g_prod.permissions.add(permiso1, permiso2, permiso3, permiso4, permiso5, permiso6, permiso7, permiso8, permiso9, permiso10, permiso11, permiso12)
+            user.groups.add(g_prod)
             login(request, user)
             return redirect('productos')
     else:
@@ -421,8 +459,22 @@ def registroTransportista(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            group = Group.objects.get(name='Transportista_grupo')
-            user.groups.add(group)
+            g_transp, creado = Group.objects.get_or_create(name='Transportista_grupo')
+            permiso1, c1 = Permission.objects.get_or_create(name='Can add subasta')
+            permiso2, c2 = Permission.objects.get_or_create(name='Can change subasta')
+            permiso3, c3 = Permission.objects.get_or_create(name='Can delete subasta')
+            permiso4, c4 = Permission.objects.get_or_create(name='Can view subasta')
+            permiso5, c5 = Permission.objects.get_or_create(name='Can view estado')
+            permiso6, c6 = Permission.objects.get_or_create(name='Can add transporte final')
+            permiso7, c7 = Permission.objects.get_or_create(name='Can change transporte final')
+            permiso8, c8 = Permission.objects.get_or_create(name='Can delete transporte final')
+            permiso9, c9 = Permission.objects.get_or_create(name='Can view transporte final')
+            permiso10, c10 = Permission.objects.get_or_create(name='Can add vehiculo')
+            permiso11, c11 = Permission.objects.get_or_create(name='Can change vehiculo')
+            permiso12, c12 = Permission.objects.get_or_create(name='Can delete vehiculo')
+            permiso13, c13 = Permission.objects.get_or_create(name='Can view vehiculo')
+            g_transp.permissions.add(permiso1, permiso2, permiso3, permiso4, permiso5, permiso6, permiso7, permiso8, permiso9, permiso10, permiso11, permiso12, permiso13)
+            user.groups.add(g_transp)
             login(request, user)
             return redirect('list_subastas')
     else:
@@ -430,14 +482,14 @@ def registroTransportista(request):
         profile_form = TransportistaForm()
     return render(request, 'registration/registroTransportista.html', {'form': form, 'profile_form': profile_form})
 
-@permission_required('core.view_solicitud compra ext')
+@permission_required('core.view_fruta')
 @allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def list_solicitud_ext(request):
     solicitud_ext = SolicitudCompraExt.objects.all()
     data = {'solicitud_ext': solicitud_ext}
     return render(request, 'core/list_solicitudes_ext.html', data)
 
-@permission_required('core.add_solicitud compra ext')
+@permission_required('core.add_fruta')
 @allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def ingresar_solicitud_ext(request):
     data = {
@@ -451,5 +503,7 @@ def ingresar_solicitud_ext(request):
 
     return render(request, 'core/ingresar_solicitud_ext.html', data)
 
+@permission_required('core.view_fruta')
+@allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def mainPage_Externos(request):
     return render(request, 'core/mainPage_Externos.html')
