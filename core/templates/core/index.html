@@ -1,13 +1,11 @@
 {% extends 'core/base.html' %}
-
 {% load static %}
-
-
-    {% block navbar %}
+<body>
+ {% block navbar %}
  
- <a class="nav-link active" href="{% url 'index' %}">Inicio <span class="sr-only">(current)</span></a>
+ <a class="nav-link active" href="#">Inicio <span class="sr-only">(current)</span></a>
           <a href="{% url 'mainPage_Externos' %}" class="nav-link">Portal Cliente Externo</a>
-          <a href="#" class="nav-link">Portal Cliente Interno</a>
+          <a href="" class="nav-link disabled">Portal Cliente Interno</a>
           <a href="{% url 'productos' %}" class="nav-link">Portal Productor</a>
           <a href="{% url 'list_subastas'%}" class="nav-link">Portal Transportista</a>
           {% if user.is_authenticated %}
@@ -15,18 +13,20 @@
           <a href="{% url 'logout' %}" class="nav-link">Cerrar Sesión</a>
         {% endif %}
  {% endblock %}
+
+     
  
- {% block content  %}
-    <h1>Modificar producto</h1>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-            
-        </table>
-        <input class="btn btn-success" type="submit" value="Modificar"> 
+ {% block content %}
 
-    </form> 
+ <div class="container">
+   <img class="col-md-auto" src="{% static "core/img/camion.jpg" %}" alt="camion">
+ </div>
 
-    {{mensaje}}
-{% endblock %}
+
+
+ <h1 style="font-style: italic;">La primera feria virtual de frutas lider en el mecado nacional y extranjero</h1>
+
+
+
+ {% endblock %}
+</body>
