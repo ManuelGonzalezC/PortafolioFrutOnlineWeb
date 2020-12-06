@@ -17,12 +17,16 @@ from django.contrib import admin
 from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from rest_framework.authtoken import views
+from core.views import Login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('api/1.0/',include(('core.urls','core'))),
+    path('api_generate_token', views.obtain_auth_token),
+    path('registration/login/', Login.as_view(), name = 'login'),
 ]
 
 admin.site.site_header="Administración de FrutOnline"

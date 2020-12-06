@@ -1,15 +1,27 @@
 from django.shortcuts import render, redirect
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic.edit import FormView
+from django.http import HttpResponseRedirect
+from rest_framework.authtoken.models import Token
 from .models import *
 from .forms import *
-from .serializers import ProductoSerializer
-from django.contrib.auth import login, authenticate
+from .serializers import *
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from .decorators import *
 from django.db import connection
 import cx_Oracle
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group, Permission
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
 
 
 
@@ -507,3 +519,44 @@ def ingresar_solicitud_ext(request):
 @allowed_users(allowed_roles=['admin','Cliente_Externo_grupo'])
 def mainPage_Externos(request):
     return render(request, 'core/mainPage_Externos.html')
+
+@permission_required('core.view_fruta')
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
+def mainPage_Internos(request):
+    producto_sobrante = ProductoSobrante.objects.all()
+    data = {'producto_sobrante': producto_sobrante}
+    return render(request, 'core/mainPage_Internos.html', data)
+
+class ProductorList(generics.ListCreateAPIView):
+    queryset = Productor.objects.all()
+    serializer_class = ProductorSerializer
+    permission_classes = {IsAuthenticated,}
+    authentication_class = {TokenAuthentication,}
+
+class Login(FormView):
+    template_name = "login.html"
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('core:Productor_list')
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return super(Login,self).dispatch(request, *args, *kwargs)
+    
+    def form_valid(self,form):
+        user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
+        token,_ = Token.objects.get_or_create(user = user)
+        if token:
+            login(self.request, form.get_user())
+            return super(Login,self).form_valid(form)
+
+class Logout(APIView):
+    def get(self,request, format = None):
+        request.user.auth_token.delete()
+        logout(request)
+        return Response(status = status.HTTP_200_OK)
+

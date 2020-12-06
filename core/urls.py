@@ -37,4 +37,6 @@ urlpatterns = [
     path('ingresar_solicitud_ext/', ingresar_solicitud_ext, name='ingresar_solicitud_ext'),
     path('registroTransportista/', registroTransportista, name='registroTransportista'),
     path('mainPage_Externos/', mainPage_Externos, name='mainPage_Externos'),
+    path('mainPage_Internos/', mainPage_Internos, name='mainPage_Internos'),
+    path('productor',ProductorList.as_view(), name='Productor_list'),
 ]

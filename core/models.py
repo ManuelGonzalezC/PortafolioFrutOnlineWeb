@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser
 
 class Adminc(models.Model):
     username = models.CharField(primary_key=True, max_length=255)
@@ -59,12 +59,12 @@ class AuthUser(models.Model):
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
 
+#    REQUIRED_FIELDS = ['username']
+#    USERNAME_FIELD = 'username'
+
     class Meta:
         managed = False
         db_table = 'auth_user'
-
-    def __str__(self):
-        return self.username
 
 
 class AuthUserGroups(models.Model):
@@ -94,15 +94,15 @@ class ClienteExterno(models.Model):
     telefono = models.BigIntegerField()
     email = models.CharField(max_length=100)
     id_pais = models.ForeignKey('Pais', models.DO_NOTHING, db_column='id_pais')
+    user = models.CharField(max_length=255, blank=True, null=True)
     #user = models.OneToOneField(User, on_delete=models.CASCADE)
     #user = models.OneToOneField('AuthUser', models.DO_NOTHING, db_column='username')
+    #REQUIRED_FIELDS = ['user']
+    #USERNAME_FIELD = 'nie'
 
     class Meta:
         managed = False
         db_table = 'cliente_externo'
-
-    def __str__(self):
-        return self.nombre_cliex
 
 
 class ClienteInterno(models.Model):
@@ -113,7 +113,7 @@ class ClienteInterno(models.Model):
     email = models.CharField(max_length=100)
     direccion = models.CharField(max_length=255)
     id_comuna = models.ForeignKey('ComunaLocal', models.DO_NOTHING, db_column='id_comuna')
-    #user = models.CharField(max_length=255, blank=True, null=True)
+    user = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -139,8 +139,6 @@ class Contrato(models.Model):
     class Meta:
         managed = False
         db_table = 'contrato'
-
-    
 
 
 class DjangoAdminLog(models.Model):
@@ -195,9 +193,6 @@ class Estado(models.Model):
         managed = False
         db_table = 'estado'
 
-    def __str__(self):
-        return self.tipo
-
 
 class Fruta(models.Model):
     id_fruta = models.FloatField(primary_key=True)
@@ -206,9 +201,6 @@ class Fruta(models.Model):
     class Meta:
         managed = False
         db_table = 'fruta'
-
-    def __str__(self):
-        return self.nombre
 
 
 class MetodoPagoE(models.Model):
@@ -299,9 +291,6 @@ class Producto(models.Model):
         managed = False
         db_table = 'producto'
 
-    def __str__(self):
-        return self.nombre
-
 
 class ProductoSobrante(models.Model):
     id_produs = models.BigAutoField(primary_key=True)
@@ -361,10 +350,10 @@ class ReporteLocal(models.Model):
 class SolicitudCompraExt(models.Model):
     id_solicitud = models.BigAutoField(primary_key=True)
     presupuesto = models.BigIntegerField()
-    id_producto = models.BigIntegerField(verbose_name="Producto")
-    nie = models.ForeignKey(ClienteExterno, models.DO_NOTHING, db_column='nie',verbose_name="Cliente Externo")
-    id_fruta = models.ForeignKey(Fruta, models.DO_NOTHING, db_column='id_fruta', verbose_name="Tipo de Fruta")
-    id_estado = models.ForeignKey(Estado, models.DO_NOTHING, db_column='id_estado', default='1')
+    id_producto = models.BigIntegerField()
+    nie = models.ForeignKey(ClienteExterno, models.DO_NOTHING, db_column='nie')
+    id_fruta = models.ForeignKey(Fruta, models.DO_NOTHING, db_column='id_fruta')
+    id_estado = models.ForeignKey(Estado, models.DO_NOTHING, db_column='id_estado')
 
     class Meta:
         managed = False
@@ -374,7 +363,7 @@ class SolicitudCompraExt(models.Model):
 class Subasta(models.Model):
     id_subasta = models.BigAutoField(primary_key=True)
     costo_transporte = models.BigIntegerField()
-    rut_transportista = models.ForeignKey('Transportista', models.DO_NOTHING, db_column='rut_transportista', verbose_name="Transportista ")
+    rut_transportista = models.ForeignKey('Transportista', models.DO_NOTHING, db_column='rut_transportista')
 
     class Meta:
         managed = False
@@ -402,9 +391,6 @@ class Transportista(models.Model):
     class Meta:
         managed = False
         db_table = 'transportista'
-
-    def __str__(self):
-        return self.nombre_transportista
 
 
 class Vehiculo(models.Model):
