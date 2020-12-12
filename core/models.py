@@ -304,6 +304,7 @@ class ProductoSobrante(models.Model):
         db_table = 'producto_sobrante'
 
 
+
 class Productor(models.Model):
     rut_productor = models.CharField(primary_key=True, max_length=10)
     nombre_productor = models.CharField(max_length=25)

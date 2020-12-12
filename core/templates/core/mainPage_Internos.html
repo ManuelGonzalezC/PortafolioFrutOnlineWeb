@@ -15,5 +15,30 @@
 
 {% block content %}
 <h5>Procesos de venta disponibles</h5>
+
+<table class="table">
+  <tr>
+      <th>ID</th>
+      <th>Precio kilo</th>
+      <th>Stock</th>
+      <th>Fruta</th>
+      <th>RUT Productor</th>
+  </tr>
+
+  {% for p in producto_sobrante %}
+  <tr>
+      <td>{{p.id_produs}}</td>
+      <td>{{p.precio_kilo}}</td>
+      <td>{{p.stock}}</td>
+      <td>{{p.id_fruta}}</td>
+      <td>{{p.rut_productor}}</td>
+      <td>
+        <button type="submit" class="btn btn-success">Comprar</button>
+      </td>
+  </tr>
+
+  {% endfor %}
+
+</table>
 {% endblock %}
 

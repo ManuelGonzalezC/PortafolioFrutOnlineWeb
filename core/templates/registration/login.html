@@ -34,7 +34,7 @@
     <a href="{% url 'registroClienteI' %}" class="btn btn-success ">Regístrate Cliente Interno</a>
     <a href="{% url 'registroProductor' %}" class="btn btn-success ">Regístrate Productor</a>
     {% if user.is_superuser %}
-    <button><a href="{% url 'registroTransportista' %}">Registrar Transportista</a></button>
+    <button><a href="{% url 'registroTransportista' %}" class="btn btn-success ">Registrar Transportista</a></button>
     {% endif %}
     {% endblock %}
 
