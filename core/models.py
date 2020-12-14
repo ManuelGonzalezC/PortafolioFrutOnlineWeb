@@ -94,7 +94,7 @@ class ClienteExterno(models.Model):
     telefono = models.BigIntegerField()
     email = models.CharField(max_length=100)
     id_pais = models.ForeignKey('Pais', models.DO_NOTHING, db_column='id_pais')
-    user = models.CharField(max_length=255, blank=True, null=True)
+    #user = models.CharField(max_length=255, blank=True, null=True)
     #user = models.OneToOneField(User, on_delete=models.CASCADE)
     #user = models.OneToOneField('AuthUser', models.DO_NOTHING, db_column='username')
     #REQUIRED_FIELDS = ['user']
@@ -113,7 +113,7 @@ class ClienteInterno(models.Model):
     email = models.CharField(max_length=100)
     direccion = models.CharField(max_length=255)
     id_comuna = models.ForeignKey('ComunaLocal', models.DO_NOTHING, db_column='id_comuna')
-    user = models.CharField(max_length=255, blank=True, null=True)
+    #user = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
