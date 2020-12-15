@@ -13,21 +13,32 @@
        {% endif %}
 {% endblock %}
 
-
 {% block content %}
-<div class="col-md-auto">
-<h4 class="text-center">¿Quieres comprar?</h4>
-<br>
-<h4 class="text-center">Revisa los productos disponibles</h4>
-<br>
-<div class="col text-center">
-<a href="{% url 'prod_sobrante_disponible' %}" class="btn btn-success mx-auto">Entrar</a>
-</div>
-<br>
-<h4 class="text-center">Revisar Procesos locales</h4>
-<br>
-<div class="col text-center">
-<a href="{% url 'list_proceso_local' %}" class="btn btn-success mx-auto ">Entrar</a>
-</div>
-</div>
+<h5>Productos disponibles</h5>
+
+<table class="table">
+  <tr>
+      <th>ID</th>
+      <th>Precio kilo</th>
+      <th>Stock</th>
+      <th>Fruta</th>
+      <th>RUT Productor</th>
+  </tr>
+
+  {% for p in producto_sobrante %}
+  <tr>
+      <td>{{p.id_produs}}</td>
+      <td>{{p.precio_kilo}}</td>
+      <td>{{p.stock}}</td>
+      <td>{{p.id_fruta}}</td>
+      <td>{{p.rut_productor}}</td>
+      <td>
+        <a href="{% url 'ingresar_proceso_local' %}" class="btn btn-success ">Comprar</a>
+      </td>
+  </tr>
+
+  {% endfor %}
+
+</table>
 {% endblock %}
+

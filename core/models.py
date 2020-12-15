@@ -104,6 +104,9 @@ class ClienteExterno(models.Model):
         managed = False
         db_table = 'cliente_externo'
 
+    def __str__(self):
+        return self.nombre_cliex
+
 
 class ClienteInterno(models.Model):
     rut_clii = models.CharField(primary_key=True, max_length=10)
@@ -119,6 +122,9 @@ class ClienteInterno(models.Model):
         managed = False
         db_table = 'cliente_interno'
 
+    def __str__(self):
+        return self.rut_clii
+
 
 class ComunaLocal(models.Model):
     id_comuna = models.BigAutoField(primary_key=True)
@@ -128,6 +134,9 @@ class ComunaLocal(models.Model):
     class Meta:
         managed = False
         db_table = 'comuna_local'
+
+    def __str__(self):
+        return self.nombre_comuna
 
 
 class Contrato(models.Model):
@@ -193,6 +202,9 @@ class Estado(models.Model):
         managed = False
         db_table = 'estado'
 
+    def __str__(self):
+        return self.tipo
+
 
 class Fruta(models.Model):
     id_fruta = models.FloatField(primary_key=True)
@@ -201,6 +213,9 @@ class Fruta(models.Model):
     class Meta:
         managed = False
         db_table = 'fruta'
+
+    def __str__(self):
+        return self.nombre
 
 
 class MetodoPagoE(models.Model):
@@ -211,6 +226,9 @@ class MetodoPagoE(models.Model):
         managed = False
         db_table = 'metodo_pago_e'
 
+    def __str__(self):
+        return self.nombre_metodo_pago
+
 
 class MetodoPagoL(models.Model):
     id_metodo_pago = models.BigAutoField(primary_key=True)
@@ -219,6 +237,9 @@ class MetodoPagoL(models.Model):
     class Meta:
         managed = False
         db_table = 'metodo_pago_l'
+
+    def __str__(self):
+        return self.nombre_metodo_pago
 
 
 class PagoEx(models.Model):
@@ -250,6 +271,9 @@ class Pais(models.Model):
     class Meta:
         managed = False
         db_table = 'pais'
+
+    def __str__(self):
+        return self.nombre
 
 
 class ProcesoVentaEx(models.Model):
@@ -291,6 +315,9 @@ class Producto(models.Model):
         managed = False
         db_table = 'producto'
 
+    def __str__(self):
+        return self.nombre
+
 
 class ProductoSobrante(models.Model):
     id_produs = models.BigAutoField(primary_key=True)
@@ -317,6 +344,9 @@ class Productor(models.Model):
         managed = False
         db_table = 'productor'
 
+    def __str__(self):
+        return self.rut_productor
+
 
 class RegionLocal(models.Model):
     id_region = models.BigAutoField(primary_key=True)
@@ -325,6 +355,9 @@ class RegionLocal(models.Model):
     class Meta:
         managed = False
         db_table = 'region_local'
+
+    def __str__(self):
+        return self.nombre_region
 
 
 class ReporteEx(models.Model):
@@ -393,6 +426,9 @@ class Transportista(models.Model):
         managed = False
         db_table = 'transportista'
 
+    def __str__(self):
+        return self.rut_transportista
+
 
 class Vehiculo(models.Model):
     patente = models.CharField(primary_key=True, max_length=6)
@@ -404,3 +440,6 @@ class Vehiculo(models.Model):
     class Meta:
         managed = False
         db_table = 'vehiculo'
+
+    def __str__(self):
+        return self.patente

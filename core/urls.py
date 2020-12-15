@@ -38,5 +38,8 @@ urlpatterns = [
     path('registroTransportista/', registroTransportista, name='registroTransportista'),
     path('mainPage_Externos/', mainPage_Externos, name='mainPage_Externos'),
     path('mainPage_Internos/', mainPage_Internos, name='mainPage_Internos'),
+    path('prod_sobrante_disponible/', prod_sobrante_disponible, name='prod_sobrante_disponible'),
+    path('list_proceso_local/', list_proceso_local, name='list_proceso_local'),
+    path('ingresar_proceso_local', ingresar_proceso_local, name='ingresar_proceso_local'),
     path('productor',ProductorList.as_view(), name='Productor_list'),
 ]

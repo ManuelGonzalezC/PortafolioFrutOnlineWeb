@@ -13,5 +13,6 @@ admin.site.register(ClienteExterno)
 admin.site.register(Productor)
 admin.site.register(SolicitudCompraExt)
 admin.site.register(ProductoSobrante)
+admin.site.register(ProcesoVentaLocal)
 
 

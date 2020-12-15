@@ -523,9 +523,46 @@ def mainPage_Externos(request):
 @permission_required('core.view_fruta')
 @allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
 def mainPage_Internos(request):
+    return render(request, 'core/mainPage_Internos.html')
+
+@permission_required('core.view_fruta')
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
+def prod_sobrante_disponible(request):
     producto_sobrante = ProductoSobrante.objects.all()
     data = {'producto_sobrante': producto_sobrante}
-    return render(request, 'core/mainPage_Internos.html', data)
+    return render(request, 'core/prod_sobrante_disponible.html', data)
+
+@permission_required('core.view_fruta')
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
+def list_proceso_local(request):
+    proceso_venta_local = ProcesoVentaLocal.objects.all()
+    data = {'proceso_venta_local': proceso_venta_local}
+    return render(request, 'core/list_proceso_local.html', data)
+
+@permission_required('core.view_fruta')
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
+def ingresar_proceso_local(request):
+    #initial_data = {
+    #    'costo_transporte' : ProductoSobrante.stock*ProductoSobrante.precio_kilo,
+    #    'comision_empresa' : int(ProductoSobrante.stock*ProductoSobrante.precio_kilo*0.19),
+    #    'id_produs' : ProcesoVentaLocal.id_produs,
+    #    'id_estado' : 1
+    #}
+    data = {
+        'form': ProcesoLocalForm()
+    }
+    #profile_form = ProcesoLocalForm(
+    #initial={'costo_transporte': 700000,
+    #'comision_empresa' : 70000,
+    #'id_produs' : 2,
+    #'id_estado' : 1})
+    #if profile_form.is_valid():
+    #    profile_form.save()
+    if request.method == 'POST':
+        formulario = ProcesoLocalForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+    return render(request, 'core/ingresar_proceso_local.html', data)
 
 class ProductorList(generics.ListCreateAPIView):
     queryset = Productor.objects.all()

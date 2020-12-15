@@ -1,5 +1,4 @@
 {% extends 'core/base.html' %}
-
 {% block navbar %}
  
 <a class="nav-link active" href="{% url 'index' %}">Inicio <span class="sr-only">(current)</span></a>
@@ -13,21 +12,17 @@
        {% endif %}
 {% endblock %}
 
-
 {% block content %}
-<div class="col-md-auto">
-<h4 class="text-center">¿Quieres comprar?</h4>
-<br>
-<h4 class="text-center">Revisa los productos disponibles</h4>
-<br>
-<div class="col text-center">
-<a href="{% url 'prod_sobrante_disponible' %}" class="btn btn-success mx-auto">Entrar</a>
-</div>
-<br>
-<h4 class="text-center">Revisar Procesos locales</h4>
-<br>
-<div class="col text-center">
-<a href="{% url 'list_proceso_local' %}" class="btn btn-success mx-auto ">Entrar</a>
-</div>
-</div>
+<h5>Procesos de venta local</h5>
+
+<ul class="list-group list-group">
+    {% for p in proceso_venta_local %}
+    <li class="list-group-item">  
+ID:  {{p.id_venta}} Costo de transporte: ${{p.costo_transporte}} Comisión Empresa: {{p.comision_empresa}} RUT Cliente Interno: {{p.rut_clii}} ID Producto: {{p.id_produs}} 
+Estado: <button type="button" class="btn btn-info">{{p.id_estado}}</button>
+
+    </li>
+    {% endfor %}
+  </ul>
+
 {% endblock %}

@@ -85,3 +85,9 @@ class SolicitudExtForm(ModelForm):
         model = SolicitudCompraExt
         fields = ['id_solicitud', 'presupuesto', 'id_producto', 'nie', 'id_fruta']
 
+class ProcesoLocalForm(ModelForm):
+    class Meta:
+        model = ProcesoVentaLocal
+        #fields = ['id_vental', 'rut_clii']
+        fields = ['id_vental', 'costo_transporte', 'comision_empresa', 'rut_clii', 'id_produs', 'id_estado']
+
