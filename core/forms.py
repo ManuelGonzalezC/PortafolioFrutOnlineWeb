@@ -86,8 +86,19 @@ class SolicitudExtForm(ModelForm):
         fields = ['id_solicitud', 'presupuesto', 'id_producto', 'nie', 'id_fruta']
 
 class ProcesoLocalForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProcesoLocalForm, self).__init__(*args, **kwargs)
+        self.fields['costo_transporte'].widget.attrs['readonly'] = True
+        self.fields['comision_empresa'].widget.attrs['readonly'] = True
+
     class Meta:
         model = ProcesoVentaLocal
-        #fields = ['id_vental', 'rut_clii']
         fields = ['id_vental', 'costo_transporte', 'comision_empresa', 'rut_clii', 'id_produs', 'id_estado']
+
+class PagoInternoForm(ModelForm):
+
+    class Meta:
+        model = PagoI
+        fields = ['id_pagoi', 'fecha_pago', 'id_metodo_pago', 'id_vental']
 

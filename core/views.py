@@ -542,27 +542,63 @@ def list_proceso_local(request):
 @permission_required('core.view_fruta')
 @allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
 def ingresar_proceso_local(request):
-    #initial_data = {
-    #    'costo_transporte' : ProductoSobrante.stock*ProductoSobrante.precio_kilo,
-    #    'comision_empresa' : int(ProductoSobrante.stock*ProductoSobrante.precio_kilo*0.19),
-    #    'id_produs' : ProcesoVentaLocal.id_produs,
-    #    'id_estado' : 1
-    #}
     data = {
         'form': ProcesoLocalForm()
     }
-    #profile_form = ProcesoLocalForm(
-    #initial={'costo_transporte': 700000,
-    #'comision_empresa' : 70000,
-    #'id_produs' : 2,
-    #'id_estado' : 1})
-    #if profile_form.is_valid():
-    #    profile_form.save()
+
     if request.method == 'POST':
         formulario = ProcesoLocalForm(request.POST)
         if formulario.is_valid():
             formulario.save()
     return render(request, 'core/ingresar_proceso_local.html', data)
+
+def ing_proceso_local(request, id):
+    prod_sobrante = ProductoSobrante.objects.get(id_produs=id)
+    prod_sobrante2 = ProcesoVentaLocal.objects.get(id_vental=id)
+    if prod_sobrante == prod_sobrante2:
+        data = {
+        'form': ProcesoLocalForm(instance=prod_sobrante2)
+        }
+    elif prod_sobrante < prod_sobrante2:
+        while prod_sobrante < prod_sobrante2:
+            prod_sobrante2 = prod_sobrante2 + 1
+        data = {
+        'form': ProcesoLocalForm(instance=prod_sobrante2)
+        }
+    else:
+        while prod_sobrante > prod_sobrante2:
+            prod_sobrante2 = prod_sobrante2 - 1
+        data = {
+        'form': ProcesoLocalForm(instance=prod_sobrante2)
+        }
+
+    if request.method == 'POST':
+        formulario = ProcesoLocalForm(data=request.POST, instance=prod_sobrante2)
+        if formulario.is_valid():
+            formulario.save()
+            data['form'] = formulario
+    return render(request, 'core/ing_proceso_local.html', data)
+
+@permission_required('core.view_fruta')
+@allowed_users(allowed_roles=['admin','Cliente_Interno_grupo'])
+def ingresar_pago_interno(request):
+    proceso_venta_local = ProcesoVentaLocal.objects.all()
+    data = {
+        'form': PagoInternoForm(),
+        'proceso_venta_local': proceso_venta_local
+    }
+    if request.method == 'POST':
+        formulario = PagoInternoForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            data['mensaje'] = 'Compra hecha con éxito, pulse el botón "Volver" para actualizar la compra'
+    return render(request, 'core/ingresar_pago_interno.html', data)
+
+def eliminar_producto_sobrante(request, id):
+    producto_sobrante = ProductoSobrante.objects.get(id_produs=id)
+    producto_sobrante.delete()
+
+    return redirect(to='ingresar_pago_interno')
 
 class ProductorList(generics.ListCreateAPIView):
     queryset = Productor.objects.all()

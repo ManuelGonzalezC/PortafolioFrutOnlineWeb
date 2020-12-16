@@ -40,6 +40,9 @@ urlpatterns = [
     path('mainPage_Internos/', mainPage_Internos, name='mainPage_Internos'),
     path('prod_sobrante_disponible/', prod_sobrante_disponible, name='prod_sobrante_disponible'),
     path('list_proceso_local/', list_proceso_local, name='list_proceso_local'),
-    path('ingresar_proceso_local', ingresar_proceso_local, name='ingresar_proceso_local'),
+    path('ingresar_proceso_local/', ingresar_proceso_local, name='ingresar_proceso_local'),
+    path('ing_proceso_local/<id>/', ing_proceso_local, name='ing_proceso_local'),
+    path('ingresar_pago_interno/', ingresar_pago_interno, name='ingresar_pago_interno'),
+    path('eliminar_producto_sobrante/<id>/', eliminar_producto_sobrante, name='eliminar_producto_sobrante'),
     path('productor',ProductorList.as_view(), name='Productor_list'),
 ]

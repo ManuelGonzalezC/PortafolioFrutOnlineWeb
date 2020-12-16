@@ -20,7 +20,7 @@
  {% block content %}
 
 
-<h2>Proceso de Venta Local</h2>
+<h2>Realización de Pago Interno</h2>
 
 <form action="" method="POST">
     {% csrf_token %}
@@ -28,7 +28,32 @@
         {{ form.as_table }}
     </table>
 
-    <input class="btn btn-success" type="submit" value="Continuar">
+    <input class="btn btn-success" type="submit" value="Aceptar">
 </form>
+{{ mensaje }}
+<br>
+
+
+
+
+<a class="btn btn-success" href="{% url 'mainPage_Internos' %}">Volver</a>
+
+
+
+<br>
+
+<h5>Procesos de venta local elegibles</h5>
+
+<ul class="list-group list-group">
+    {% for p in proceso_venta_local %}
+    <li class="list-group-item">  
+ID:  {{p.id_vental}} Costo de transporte: ${{p.costo_transporte}} Comisión Empresa: ${{p.comision_empresa}} RUT Cliente Interno: {{p.rut_clii}} ID Producto: {{p.id_produs}} 
+Estado: <button type="button" class="btn btn-info">{{p.id_estado}}</button>
+
+    </li>
+    {% endfor %}
+  </ul>
+
+
 
 {% endblock %}
